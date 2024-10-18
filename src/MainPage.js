@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, Menu, User, LogIn, Home, Zap, Scissors, BookOpen, Wrench, Briefcase } from 'lucide-react';
-import {  Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './components/ui/Dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './components/ui/Dialog';
 import Label from './components/ui/Label';
 import Input from './components/ui/Input';
 import { Button } from './components/ui/Button';
@@ -15,6 +15,69 @@ const services = [
 
 const MainPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+// Register user
+const registerUser = async (event) => {
+  event.preventDefault();
+
+  const userData = {
+    name: event.target.name.value,
+    email: event.target.email.value,
+    password: event.target.password.value,
+  };
+
+  try {
+    const response = await fetch('http://localhost:3001/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    });
+  
+    const data = await response.json();
+    
+    if (response.ok) {
+      alert('Registration successful!');
+    } else {
+      // Handle server errors or validation errors
+      const errorMessage = data.message || data.errors?.map(e => e.msg).join(', ') || 'An error occurred during registration';
+      alert(`Registration failed: ${errorMessage}`);
+    }
+  } catch (error) {
+    // Handle network errors or other exceptions
+    console.error('Registration error:', error);
+    alert(`Registration failed: ${error.message || 'An unexpected error occurred'}`);
+  }  
+};
+// Login user
+const loginUser = async (event) => {
+  event.preventDefault();
+
+  const loginData = {
+    email: event.target.email.value, // Changed username to email
+    password: event.target.password.value,
+  };
+
+  try {
+    const response = await fetch('http://localhost:3001/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(loginData),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      alert('Login successful!');
+    } else {
+      alert(data.message);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -36,7 +99,7 @@ const MainPage = () => {
                 <DialogHeader>
                   <DialogTitle>Login</DialogTitle>
                 </DialogHeader>
-                <form className="space-y-4">
+                <form className="space-y-4" onSubmit={loginUser}>
                   <div>
                     <Label htmlFor="email">Email</Label>
                     <Input id="email" type="email" placeholder="Enter your email" />
@@ -57,7 +120,8 @@ const MainPage = () => {
                 <DialogHeader>
                   <DialogTitle>Register</DialogTitle>
                 </DialogHeader>
-                <form className="space-y-4">
+                
+                <form className="space-y-4" onSubmit={registerUser}>
                   <div>
                     <Label htmlFor="name">Name</Label>
                     <Input id="name" type="text" placeholder="Enter your name" />
@@ -92,7 +156,7 @@ const MainPage = () => {
                 <DialogHeader>
                   <DialogTitle>Login</DialogTitle>
                 </DialogHeader>
-                <form className="space-y-4">
+                <form className="space-y-4" onSubmit={loginUser}>
                   <div>
                     <Label htmlFor="email">Email</Label>
                     <Input id="email" type="email" placeholder="Enter your email" />
@@ -113,7 +177,7 @@ const MainPage = () => {
                 <DialogHeader>
                   <DialogTitle>Register</DialogTitle>
                 </DialogHeader>
-                <form className="space-y-4">
+                <form className="space-y-4" onSubmit={registerUser}>
                   <div>
                     <Label htmlFor="name">Name</Label>
                     <Input id="name" type="text" placeholder="Enter your name" />
@@ -211,4 +275,3 @@ const MainPage = () => {
 };
 
 export default MainPage;
-
