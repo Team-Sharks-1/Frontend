@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Menu, User, LogIn, Home, Zap } from 'lucide-react';
+import { X, Menu, User, LogIn, Home, Zap, Scissors, BookOpen, Wrench, Briefcase } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './components/ui/Dialog';
 import Label from './components/ui/Label';
 import Input from './components/ui/Input';
@@ -8,10 +8,10 @@ import { Button } from './components/ui/Button';
 
 const services = [
   { name: 'Electrician', icon: Zap, route: '/professionals?service=Electrician' },
-  { name: 'Gardener', icon: Zap, route: '/professionals?service=Gardener' },
-  { name: 'Tutor', icon: Zap, route: '/professionals?service=Tutor' },
-  { name: 'Plumber', icon: Zap, route: '/professionals?service=Plumber' },
-  { name: 'Maid', icon: Zap, route: '/professionals?service=Maid' }
+  { name: 'Gardener', icon: Scissors, route: '/professionals?service=Gardener' },
+  { name: 'Tutor', icon: BookOpen, route: '/professionals?service=Tutor' },
+  { name: 'Plumber', icon: Wrench, route: '/professionals?service=Plumber' },
+  { name: 'Maid', icon: Briefcase, route: '/professionals?service=Maid' }
 ];
 
 const MainPage = () => {
