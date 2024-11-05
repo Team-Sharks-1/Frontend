@@ -7,11 +7,11 @@ import Input from './components/ui/Input';
 import { Button } from './components/ui/Button';
 
 const services = [
-  { name: 'Electrician', icon: Zap, route: '/professionals?service=Electrician' },
-  { name: 'Gardener', icon: Scissors, route: '/professionals?service=Gardener' },
-  { name: 'Tutor', icon: BookOpen, route: '/professionals?service=Tutor' },
-  { name: 'Plumber', icon: Wrench, route: '/professionals?service=Plumber' },
-  { name: 'Maid', icon: Briefcase, route: '/professionals?service=Maid' }
+  { name: 'Electrician', icon: Zap, route: 'electrician' },
+  { name: 'Gardener', icon: Scissors, route: 'gardener' },
+  { name: 'Tutor', icon: BookOpen, route: 'tutor' },
+  { name: 'Plumber', icon: Wrench, route: 'plumber' },
+  { name: 'Maid', icon: Briefcase, route: 'maid' }
 ];
 
 const MainPage = () => {
@@ -167,7 +167,7 @@ const MainPage = () => {
                 <div 
                   key={index} 
                   className="text-center cursor-pointer bg-blue-100 rounded-lg p-4 hover:bg-blue-200 transition duration-200"
-                  onClick={() => navigate(service.route)}
+                  onClick={() => navigate(`/service-details?service=${service.route}`)}
                 >
                   <div className="bg-blue-200 rounded-full p-4 inline-block mb-4">
                     <service.icon className="h-8 w-8 text-blue-600" />

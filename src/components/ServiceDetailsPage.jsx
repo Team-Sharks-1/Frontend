@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Star, MapPin, Filter, ChevronDown } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/Dialog';
 import Label from './ui/Label';
@@ -26,7 +27,8 @@ const professionals = {
   ],
 };
 
-const ServiceDetailsPage = ({ serviceType = "electrician" }) => {
+const ServiceDetailsPage = () => {
+  const location = useLocation();
   const [filters, setFilters] = useState({
     priceRange: 'all',
     rating: 'all',
@@ -35,15 +37,11 @@ const ServiceDetailsPage = ({ serviceType = "electrician" }) => {
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState('rating');
 
-  // Get service type from URL if not provided as prop
-  const getServiceFromUrl = () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('service') || serviceType;
-  };
-
-  const currentService = getServiceFromUrl();
-  const serviceData = professionals[currentService.toLowerCase()] || [];
-  const capitalizedService = currentService.charAt(0).toUpperCase() + currentService.slice(1);
+  // Extract service type from URL query parameters
+  const queryParams = new URLSearchParams(location.search);
+  const serviceType = queryParams.get('service')?.toLowerCase() || 'electrician';
+  const serviceData = professionals[serviceType] || [];
+  const capitalizedService = serviceType.charAt(0).toUpperCase() + serviceType.slice(1);
 
   const handleFilterChange = (key, value) => {
     setFilters(prev => ({
