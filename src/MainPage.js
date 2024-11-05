@@ -1,17 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Menu, User, LogIn, Home, Zap, Scissors, BookOpen, Wrench, Briefcase } from 'lucide-react';
+import { X, Menu, User, LogIn, Home, Zap } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './components/ui/Dialog';
 import Label from './components/ui/Label';
 import Input from './components/ui/Input';
 import { Button } from './components/ui/Button';
 
 const services = [
-  { name: 'Electrician', icon: Zap, route: '/professionals?service=Electrician' },
-  { name: 'Gardener', icon: Scissors, route: '/professionals?service=Gardener' },
-  { name: 'Tutor', icon: BookOpen, route: '/professionals?service=Tutor' },
-  { name: 'Plumber', icon: Wrench, route: '/professionals?service=Plumber' },
-  { name: 'Maid', icon: Briefcase, route: '/professionals?service=Maid' },
+  { name: 'Electrician', icon: Zap, route: '/professionals?service=Electrician' }
 ];
 
 const MainPage = () => {
@@ -162,14 +158,13 @@ const MainPage = () => {
         <section id="services" className="py-16">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12">Our Services</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
               {services.map((service, index) => (
                 <div key={index} className="text-center">
                   <div className="bg-blue-100 rounded-full p-4 inline-block mb-4">
                     <service.icon className="h-8 w-8 text-blue-600" />
                   </div>
                   <h3 className="font-semibold">{service.name}</h3>
-                  <Button onClick={() => navigate(service.route)} className="mt-2">View {service.name}</Button>
                 </div>
               ))}
             </div>
