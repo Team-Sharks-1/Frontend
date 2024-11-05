@@ -7,7 +7,11 @@ import Input from './components/ui/Input';
 import { Button } from './components/ui/Button';
 
 const services = [
-  { name: 'Electrician', icon: Zap, route: '/professionals?service=Electrician' }
+  { name: 'Electrician', icon: Zap, route: '/professionals?service=Electrician' },
+  { name: 'Gardener', icon: Zap, route: '/professionals?service=Gardener' },
+  { name: 'Tutor', icon: Zap, route: '/professionals?service=Tutor' },
+  { name: 'Plumber', icon: Zap, route: '/professionals?service=Plumber' },
+  { name: 'Maid', icon: Zap, route: '/professionals?service=Maid' }
 ];
 
 const MainPage = () => {
@@ -160,11 +164,15 @@ const MainPage = () => {
             <h2 className="text-3xl font-bold text-center mb-12">Our Services</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
               {services.map((service, index) => (
-                <div key={index} className="text-center">
-                  <div className="bg-blue-100 rounded-full p-4 inline-block mb-4">
+                <div 
+                  key={index} 
+                  className="text-center cursor-pointer bg-blue-100 rounded-lg p-4 hover:bg-blue-200 transition duration-200"
+                  onClick={() => navigate(service.route)}
+                >
+                  <div className="bg-blue-200 rounded-full p-4 inline-block mb-4">
                     <service.icon className="h-8 w-8 text-blue-600" />
                   </div>
-                  <h3 className="font-semibold">{service.name}</h3>
+                  <h3 className="font-semibold text-lg">{service.name}</h3>
                 </div>
               ))}
             </div>
