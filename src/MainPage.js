@@ -18,64 +18,12 @@ const MainPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  // Register user
-  const registerUser = async (event) => {
-    event.preventDefault();
-    const userData = {
-      name: event.target.name.value,
-      email: event.target.email.value,
-      password: event.target.password.value,
-    };
-
-    try {
-      const response = await fetch('http://localhost:3001/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        alert('Registration successful!');
-      } else {
-        const errorMessage = data.message || data.errors?.map(e => e.msg).join(', ') || 'An error occurred during registration';
-        alert(`Registration failed: ${errorMessage}`);
-      }
-    } catch (error) {
-      console.error('Registration error:', error);
-      alert(`Registration failed: ${error.message || 'An unexpected error occurred'}`);
-    }
+  const handleLoginClick = () => {
+    navigate('/login-options');
   };
 
-  // Login user
-  const loginUser = async (event) => {
-    event.preventDefault();
-
-    const loginData = {
-      email: event.target.email.value,
-      password: event.target.password.value,
-    };
-
-    try {
-      const response = await fetch('http://localhost:3001/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(loginData),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        alert('Login successful!');
-      } else {
-        alert(data.message);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
+  const handleRegisterClick = () => {
+    navigate('/register-options');
   };
 
   return (
@@ -90,52 +38,8 @@ const MainPage = () => {
             <a href="#services" className="text-gray-600 hover:text-blue-600">Services</a>
             <a href="#how-it-works" className="text-gray-600 hover:text-blue-600">How It Works</a>
             <a href="#about" className="text-gray-600 hover:text-blue-600">About</a>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="outline">Login</Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Login</DialogTitle>
-                </DialogHeader>
-                <form className="space-y-4" onSubmit={loginUser}>
-                  <div>
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" name="email" type="email" placeholder="Enter your email" />
-                  </div>
-                  <div>
-                    <Label htmlFor="password">Password</Label>
-                    <Input id="password" name="password" type="password" placeholder="Enter your password" />
-                  </div>
-                  <Button type="submit" className="w-full">Login</Button>
-                </form>
-              </DialogContent>
-            </Dialog>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button>Register</Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Register</DialogTitle>
-                </DialogHeader>
-                <form className="space-y-4" onSubmit={registerUser}>
-                  <div>
-                    <Label htmlFor="name">Name</Label>
-                    <Input id="name" name="name" type="text" placeholder="Enter your name" />
-                  </div>
-                  <div>
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" name="email" type="email" placeholder="Enter your email" />
-                  </div>
-                  <div>
-                    <Label htmlFor="password">Password</Label>
-                    <Input id="password" name="password" type="password" placeholder="Create a password" />
-                  </div>
-                  <Button type="submit" className="w-full">Register</Button>
-                </form>
-              </DialogContent>
-            </Dialog>
+            <Button variant="outline" onClick={handleLoginClick}>Login</Button>
+            <Button onClick={handleRegisterClick}>Register</Button>
           </nav>
           <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
