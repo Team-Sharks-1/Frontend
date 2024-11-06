@@ -9,6 +9,7 @@ import UserLogin from "./components/ui/UserLogin"; // Import UserLogin
 import ProfessionalLogin from "./components/ui/ProfessionalLogin"; // Import ProfessionalLogin
 import UserRegister from "./components/ui/UserRegister"; // Import UserRegister
 import ProfessionalRegister from "./components/ui/ProfessionalRegister"; // Import ProfessionalRegister
+import VendorDashboard from "./components/ui/VendorDashboard"; // Import VendorDashboard
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/login/professional" element={<ProfessionalLogin />} /> {/* Professional login route */}
         <Route path="/register/user" element={<UserRegister />} /> {/* User register route */}
         <Route path="/register/professional" element={<ProfessionalRegister />} /> {/* Professional register route */}
+        <Route path="/vendor/dashboard" element={<VendorDashboard />} /> {/* Vendor dashboard route */}
       </Routes>
     </Router>
   );
