@@ -11,21 +11,35 @@ const professionals = {
   electrician: [
     { id: 1, name: "John Doe", rating: 4.8, jobs: 156, experience: 5, costPerHour: 45, location: "Downtown", description: "Certified electrician specializing in residential and commercial electrical services.", image: "/api/placeholder/100/100" },
     { id: 2, name: "Sarah Smith", rating: 4.9, jobs: 203, experience: 8, costPerHour: 55, location: "Westside", description: "Master electrician with expertise in smart home installations.", image: "/api/placeholder/100/100" },
+    { id: 3, name: "James Lee", rating: 4.6, jobs: 98, experience: 4, costPerHour: 40, location: "Eastside", description: "Experienced in electrical repairs and wiring.", image: "/api/placeholder/100/100" },
+    { id: 4, name: "Nancy Young", rating: 4.7, jobs: 176, experience: 6, costPerHour: 50, location: "Southside", description: "Specializes in lighting and smart home installations.", image: "/api/placeholder/100/100" },
   ],
   plumber: [
     { id: 1, name: "Mike Johnson", rating: 4.7, jobs: 178, experience: 6, costPerHour: 50, location: "Eastside", description: "Licensed plumber specializing in emergency repairs and installations.", image: "/api/placeholder/100/100" },
     { id: 2, name: "David Wilson", rating: 4.6, jobs: 145, experience: 4, costPerHour: 40, location: "Northside", description: "Expert in modern plumbing systems and water heater installation.", image: "/api/placeholder/100/100" },
+    { id: 3, name: "Lucy White", rating: 4.8, jobs: 134, experience: 7, costPerHour: 60, location: "Downtown", description: "Skilled in kitchen and bathroom remodeling.", image: "/api/placeholder/100/100" },
+    { id: 4, name: "Robert Green", rating: 4.5, jobs: 90, experience: 5, costPerHour: 45, location: "Westside", description: "Specialist in pipe and drain cleaning.", image: "/api/placeholder/100/100" },
   ],
   gardener: [
     { id: 1, name: "Emma Brown", rating: 4.8, jobs: 134, experience: 7, costPerHour: 35, location: "Downtown", description: "Experienced gardener specializing in landscape design and maintenance.", image: "/api/placeholder/100/100" },
+    { id: 2, name: "Liam Davis", rating: 4.7, jobs: 120, experience: 6, costPerHour: 30, location: "Westside", description: "Expert in lawn care and seasonal planting.", image: "/api/placeholder/100/100" },
+    { id: 3, name: "Olivia Johnson", rating: 4.9, jobs: 152, experience: 8, costPerHour: 40, location: "Eastside", description: "Provides eco-friendly gardening solutions.", image: "/api/placeholder/100/100" },
+    { id: 4, name: "Ethan Williams", rating: 4.6, jobs: 95, experience: 5, costPerHour: 32, location: "Southside", description: "Specializes in irrigation and garden upkeep.", image: "/api/placeholder/100/100" },
   ],
   tutor: [
     { id: 1, name: "Alice Cooper", rating: 4.9, jobs: 245, experience: 10, costPerHour: 40, location: "Westside", description: "Mathematics and Science tutor with proven track record of student success.", image: "/api/placeholder/100/100" },
+    { id: 2, name: "Michael Carter", rating: 4.7, jobs: 189, experience: 6, costPerHour: 35, location: "Downtown", description: "English and History tutor, experienced with high school and college students.", image: "/api/placeholder/100/100" },
+    { id: 3, name: "Sophia Clark", rating: 4.8, jobs: 212, experience: 8, costPerHour: 45, location: "Northside", description: "Specializes in Physics and Chemistry for advanced students.", image: "/api/placeholder/100/100" },
+    { id: 4, name: "Daniel Thomas", rating: 4.6, jobs: 132, experience: 5, costPerHour: 30, location: "Eastside", description: "Expert in SAT preparation and test-taking strategies.", image: "/api/placeholder/100/100" },
   ],
   maid: [
     { id: 1, name: "Patricia Lee", rating: 4.7, jobs: 189, experience: 5, costPerHour: 30, location: "Eastside", description: "Professional house cleaner with attention to detail and eco-friendly cleaning methods.", image: "/api/placeholder/100/100" },
+    { id: 2, name: "Nancy Gray", rating: 4.8, jobs: 210, experience: 7, costPerHour: 35, location: "Downtown", description: "Experienced in deep cleaning and organization services.", image: "/api/placeholder/100/100" },
+    { id: 3, name: "James Brooks", rating: 4.5, jobs: 170, experience: 6, costPerHour: 28, location: "Westside", description: "Specialist in eco-friendly cleaning products and techniques.", image: "/api/placeholder/100/100" },
+    { id: 4, name: "Rebecca Hall", rating: 4.6, jobs: 155, experience: 4, costPerHour: 32, location: "Southside", description: "Efficient and trustworthy, with a focus on customer satisfaction.", image: "/api/placeholder/100/100" },
   ],
 };
+
 
 const ServiceDetailsPage = () => {
   const location = useLocation();
