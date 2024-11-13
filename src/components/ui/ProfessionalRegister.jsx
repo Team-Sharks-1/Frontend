@@ -3,29 +3,54 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from './Button'; // Assuming Button component is available in the same directory
 import Input from './Input'; // Assuming Input component is available
 
-const ProfessionalRegister = () => {
+function ProfessionalRegister() {
   const navigate = useNavigate();
-  const [serviceType, setServiceType] = useState('');
-  const [name, setName] = useState('');
-  const [address, setAddress] = useState('');
-  const [email, setEmail] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [serviceLicenseID, setServiceLicenseID] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({
+    serviceType: '',
+    name: '',
+    address: '',
+    email: '',
+    phoneNumber: '',
+    licenseId: '',
+    password: ''
+  });
+  const [errorMessage, setErrorMessage] = useState(''); // To display error messages if registration fails
+  const [successMessage, setSuccessMessage] = useState(''); // To display success messages if registration succeeds
 
-  const handleRegister = (e) => {
-    e.preventDefault();
-    // Registration logic here, e.g., an API call to register the professional
-    console.log('Registering professional with', {
-      serviceType,
-      name,
-      address,
-      email,
-      phoneNumber,
-      serviceLicenseID,
-      password,
-    });
+  // Handle input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }));
+  };
 
+  // Handle form submission
+  const handleRegister = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await fetch('http://localhost:3001/api/register_professionals', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // If registration is successful, set a success message and navigate after a delay
+        setSuccessMessage("Registration successful! Redirecting to login...");
+        setTimeout(() => navigate('/login/professional'), 2000); // Redirect to login after a short delay
+      } else {
+        // If an error occurs, set an error message to display
+        setErrorMessage(data.error || 'Failed to register professional. Please try again.');
+      }
+    } catch (error) {
+      // Handle any network or unexpected errors
+      console.error('Error:', error);
+      setErrorMessage('An unexpected error occurred. Please try again later.');
+    }
     // Navigate to the professional login or dashboard page after successful registration
     navigate('/login/professional'); // Redirect to login or dashboard as needed
   };
