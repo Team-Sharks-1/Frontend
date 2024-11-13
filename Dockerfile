@@ -6,7 +6,8 @@ COPY package*.json ./
 RUN npm install -g npm@latest
 
 # Install dependencies and attempt to fix vulnerabilities
-RUN npm install && npm audit fix --force
+RUN npm install 
+# && npm audit fix --force
 
 # Copy the application source code
 COPY . .
