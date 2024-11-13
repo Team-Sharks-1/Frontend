@@ -12,6 +12,10 @@ RUN npm install
 # Copy the application source code
 COPY . .
 
+# # Use Nginx to serve the built application
+# FROM nginx:latest
+# COPY --from=0 /usr/src/app/build /usr/share/nginx/html
+
 # Expose the application port
 EXPOSE 3000
 
