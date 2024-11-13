@@ -51,10 +51,8 @@ function ProfessionalRegister() {
       console.error('Error:', error);
       setErrorMessage('An unexpected error occurred. Please try again later.');
     }
-    // Navigate to the professional login or dashboard page after successful registration
-    navigate('/login/professional'); // Redirect to login or dashboard as needed
   };
-
+  
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-blue-600 text-white px-4">
       <div className="bg-white text-center p-8 rounded-lg shadow-lg max-w-md w-full">
