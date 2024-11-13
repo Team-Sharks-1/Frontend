@@ -1,52 +1,106 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Button } from './Button'; // Assuming Button component is available in the same directory
+import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import Bookings from './vendordashboard/Bookings';
+import Profile from './vendordashboard/Profile';
+import Settings from './vendordashboard/Settings';
+import Logout from './vendordashboard/Logout';
+import './VendorDashboard.css';
 
-const VendorDashboard = () => {
-  const navigate = useNavigate();
+function VendorDashboard() {
+  const location = useLocation();
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-blue-600 text-white px-4">
-      <div className="bg-white text-center p-8 rounded-lg shadow-lg max-w-3xl w-full mt-8">
-        <h1 className="text-3xl font-bold text-blue-600 mb-4">Welcome to Your Dashboard</h1>
-        <p className="text-gray-700 mb-6">Manage your services, view bookings, and update your profile here.</p>
+    <div className="dashboard-container">
+      <aside className="sidebar">
+        <h2 className="logo"><b>UrbanConnect</b></h2>
+        <nav>
+          <ul>
+            <li>
+              <Link
+                to="/vendor/dashboard"
+                className={location.pathname === '/vendor/dashboard' ? 'active' : ''}
+              >
+                Dashboard
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/vendor/bookings"
+                className={location.pathname === '/vendor/bookings' ? 'active' : ''}
+              >
+                Bookings
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/vendor/profile"
+                className={location.pathname === '/vendor/profile' ? 'active' : ''}
+              >
+                Profile
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/vendor/settings"
+                className={location.pathname === '/vendor/settings' ? 'active' : ''}
+              >
+                Settings
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/vendor/logout"
+                className={location.pathname === '/vendor/logout' ? 'active' : ''}
+              >
+                Logout
+              </Link>
+            </li>
+          </ul>
+        </nav>
+      </aside>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-blue-100 p-4 rounded-lg text-blue-600 shadow-md">
-            <h2 className="text-xl font-semibold mb-2">View Bookings</h2>
-            <p className="text-gray-600 mb-4">Check your current and upcoming bookings.</p>
-            <Button onClick={() => navigate('/vendor/bookings')} className="bg-blue-600 text-white w-full hover:bg-blue-700">
-              Go to Bookings
-            </Button>
-          </div>
+      <main className="dashboard-content">
+        {/* Conditionally render the welcome message only on the dashboard page */}
+        {location.pathname === '/vendor/dashboard' && (
+          <header className="dashboard-header">
+            <h1>Welcome to Your Dashboard</h1>
+            <p>Manage your services, view bookings, and update your profile here.</p>
+          </header>
+        )}
 
-          <div className="bg-blue-100 p-4 rounded-lg text-blue-600 shadow-md">
-            <h2 className="text-xl font-semibold mb-2">Manage Services</h2>
-            <p className="text-gray-600 mb-4">Edit or add new services to your offerings.</p>
-            <Button onClick={() => navigate('/vendor/services')} className="bg-blue-600 text-white w-full hover:bg-blue-700">
-              Manage Services
-            </Button>
-          </div>
-
-          <div className="bg-blue-100 p-4 rounded-lg text-blue-600 shadow-md">
-            <h2 className="text-xl font-semibold mb-2">Profile Settings</h2>
-            <p className="text-gray-600 mb-4">Update your profile information and contact details.</p>
-            <Button onClick={() => navigate('/vendor/profile')} className="bg-blue-600 text-white w-full hover:bg-blue-700">
-              Update Profile
-            </Button>
-          </div>
-
-          <div className="bg-blue-100 p-4 rounded-lg text-blue-600 shadow-md">
-            <h2 className="text-xl font-semibold mb-2">Logout</h2>
-            <p className="text-gray-600 mb-4">Logout from your account securely.</p>
-            <Button onClick={() => navigate('/login/professional')} className="bg-blue-600 text-white w-full hover:bg-blue-700">
-              Logout
-            </Button>
-          </div>
-        </div>
-      </div>
+        <Routes>
+          <Route path="dashboard" element={<DashboardCards />} />
+          <Route path="bookings" element={<Bookings />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="settings" element={<Settings />} />
+          <Route path="logout" element={<Logout />} />
+        </Routes>
+      </main>
     </div>
   );
-};
+}
 
 export default VendorDashboard;
+
+function DashboardCards() {
+  return (
+    <section className="dashboard-cards">
+      <div className="card">
+        <h3>View Bookings</h3>
+        <p>Check your current and upcoming bookings.</p>
+        <Link to="/vendor/bookings" className="card-button">Go to Bookings</Link>
+      </div>
+
+      <div className="card">
+        <h3>Profile Settings</h3>
+        <p>Update your profile information and contact details.</p>
+        <Link to="/vendor/profile" className="card-button">Update Profile</Link>
+      </div>
+      <div className="card">
+        <h3>Logout</h3>
+        <p>Logout from your account securely.</p>
+        <Link to="/vendor/logout" className="card-button">Logout</Link>
+      </div>
+    </section>
+  );
+}

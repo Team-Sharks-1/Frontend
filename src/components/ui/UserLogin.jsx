@@ -1,46 +1,75 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './UserLogin.css'; // Assuming you have a CSS file for styling
+import { Button } from './Button';
+import Input from './Input';
 
 const UserLogin = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+  const [error, setError] = useState(null); // State for error message
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Replace the following with your actual authentication logic
-    const isAuthenticated = true; // Simulating a successful login
+    setError(null); // Clear any previous error
 
-    if (isAuthenticated) {
-      navigate('/service-details'); // Redirect to ServiceDetailsPage after successful login
-    } else {
-      alert('Invalid credentials. Please try again.');
+    try {
+      // Simulate an API call
+      const response = await fetch('http://localhost:3001/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Invalid email or password');
+      }
+
+      // On successful login, navigate to the dashboard
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err.message); // Set the error message to display
     }
   };
 
   return (
-    <div className="login-container">
-      <h2 className="login-title">User Login</h2>
-      <form className="login-form" onSubmit={handleLogin}>
-        <label>Email:</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          placeholder="Enter your email"
-        />
-        <label>Password:</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          placeholder="Enter your password"
-        />
-        <button type="submit" className="login-button">Login</button>
-      </form>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-blue-600 text-white px-4">
+      <div className="bg-white text-center p-8 rounded-lg shadow-lg max-w-md w-full">
+        <h1 className="text-2xl font-bold text-blue-600 mb-6">User Login</h1>
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div>
+            <label htmlFor="email" className="block text-left text-gray-600 mb-1">Email</label>
+            <Input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              required
+              className="w-full text-black placeholder-gray-500"
+            />
+          </div>
+          <div>
+            <label htmlFor="password" className="block text-left text-gray-600 mb-1">Password</label>
+            <Input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+              required
+              className="w-full text-black placeholder-gray-500"
+            />
+          </div>
+          <Button type="submit" className="w-full bg-blue-600 text-white hover:bg-blue-700 py-3">
+            Login
+          </Button>
+          {error && <p className="text-red-500 mt-2">{error}</p>} {/* Display error message */}
+        </form>
+        <p className="text-sm text-gray-600 mt-4">
+          Don't have an account? <span className="text-blue-600 cursor-pointer" onClick={() => navigate('/register-options')}>Register</span>
+        </p>
+      </div>
     </div>
   );
 };

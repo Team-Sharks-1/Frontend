@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Menu, User, LogIn, Home, Zap, Scissors, BookOpen, Wrench, Briefcase } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './components/ui/Dialog';
-import Label from './components/ui/Label';
-import Input from './components/ui/Input';
 import { Button } from './components/ui/Button';
 
 const services = [
@@ -19,9 +16,8 @@ const MainPage = () => {
   const navigate = useNavigate();
 
   const handleLoginClick = () => {
-    navigate('/login-options');
-  };
-
+    navigate('/login-options'); 
+  };  
   const handleRegisterClick = () => {
     navigate('/register-options');
   };
