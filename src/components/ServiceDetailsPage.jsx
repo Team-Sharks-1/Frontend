@@ -1,56 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Star, MapPin, Filter, ChevronDown } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/Dialog';
 import Label from './ui/Label';
 import Input from './ui/Input';
 import { Button } from './ui/Button';
-
-// Sample data - In a real app, this would come from an API
-const professionals = {
-  electrician: [
-    { id: 1, name: "John Doe", rating: 4.8, jobs: 156, experience: 5, costPerHour: 45, location: "Downtown", description: "Certified electrician specializing in residential and commercial electrical services.", image: "https://via.placeholder.com/100" },
-    { id: 2, name: "Sarah Smith", rating: 4.9, jobs: 203, experience: 8, costPerHour: 55, location: "Westside", description: "Master electrician with expertise in smart home installations.", image: "https://via.placeholder.com/100" },
-    { id: 3, name: "James Lee", rating: 4.6, jobs: 98, experience: 4, costPerHour: 40, location: "Eastside", description: "Experienced in electrical repairs and wiring.", image: "https://via.placeholder.com/100" },
-    { id: 4, name: "Nancy Young", rating: 4.7, jobs: 176, experience: 6, costPerHour: 50, location: "Southside", description: "Specializes in lighting and smart home installations.", image: "https://via.placeholder.com/100" },
-    { id: 5, name: "Robert Hill", rating: 4.5, jobs: 125, experience: 3, costPerHour: 35, location: "Northside", description: "Focused on small home electrical repairs.", image: "https://via.placeholder.com/100" },
-    { id: 6, name: "Laura Turner", rating: 4.8, jobs: 189, experience: 7, costPerHour: 60, location: "Downtown", description: "Expert in electrical safety inspections.", image: "https://via.placeholder.com/100" },
-  ],
-  plumber: [
-    { id: 1, name: "Mike Johnson", rating: 4.7, jobs: 178, experience: 6, costPerHour: 50, location: "Eastside", description: "Licensed plumber specializing in emergency repairs and installations.", image: "https://via.placeholder.com/100" },
-    { id: 2, name: "David Wilson", rating: 4.6, jobs: 145, experience: 4, costPerHour: 40, location: "Northside", description: "Expert in modern plumbing systems and water heater installation.", image: "https://via.placeholder.com/100" },
-    { id: 3, name: "Lucy White", rating: 4.8, jobs: 134, experience: 7, costPerHour: 60, location: "Downtown", description: "Skilled in kitchen and bathroom remodeling.", image: "https://via.placeholder.com/100" },
-    { id: 4, name: "Robert Green", rating: 4.5, jobs: 90, experience: 5, costPerHour: 45, location: "Westside", description: "Specialist in pipe and drain cleaning.", image: "https://via.placeholder.com/100" },
-    { id: 5, name: "Angela Brown", rating: 4.9, jobs: 210, experience: 9, costPerHour: 70, location: "Downtown", description: "Master plumber specializing in large installations.", image: "https://via.placeholder.com/100" },
-    { id: 6, name: "Tom Clark", rating: 4.4, jobs: 85, experience: 4, costPerHour: 38, location: "Southside", description: "Expert in water heater maintenance and repair.", image: "https://via.placeholder.com/100" },
-  ],
-  gardener: [
-    { id: 1, name: "Emma Brown", rating: 4.8, jobs: 134, experience: 7, costPerHour: 35, location: "Downtown", description: "Experienced gardener specializing in landscape design and maintenance.", image: "https://via.placeholder.com/100" },
-    { id: 2, name: "Liam Davis", rating: 4.7, jobs: 120, experience: 6, costPerHour: 30, location: "Westside", description: "Expert in lawn care and seasonal planting.", image: "https://via.placeholder.com/100" },
-    { id: 3, name: "Olivia Johnson", rating: 4.9, jobs: 152, experience: 8, costPerHour: 40, location: "Eastside", description: "Provides eco-friendly gardening solutions.", image: "https://via.placeholder.com/100" },
-    { id: 4, name: "Ethan Williams", rating: 4.6, jobs: 95, experience: 5, costPerHour: 32, location: "Southside", description: "Specializes in irrigation and garden upkeep.", image: "https://via.placeholder.com/100" },
-    { id: 5, name: "Sophia Brown", rating: 4.7, jobs: 110, experience: 5, costPerHour: 34, location: "Northside", description: "Garden designer with a passion for native plants.", image: "https://via.placeholder.com/100" },
-    { id: 6, name: "William Martinez", rating: 4.9, jobs: 160, experience: 9, costPerHour: 45, location: "Downtown", description: "Specializes in organic and sustainable gardening.", image: "https://via.placeholder.com/100" },
-  ],
-  tutor: [
-    { id: 1, name: "Alice Cooper", rating: 4.9, jobs: 245, experience: 10, costPerHour: 40, location: "Westside", description: "Mathematics and Science tutor with proven track record of student success.", image: "https://via.placeholder.com/100" },
-    { id: 2, name: "Michael Carter", rating: 4.7, jobs: 189, experience: 6, costPerHour: 35, location: "Downtown", description: "English and History tutor, experienced with high school and college students.", image: "https://via.placeholder.com/100" },
-    { id: 3, name: "Sophia Clark", rating: 4.8, jobs: 212, experience: 8, costPerHour: 45, location: "Northside", description: "Specializes in Physics and Chemistry for advanced students.", image: "https://via.placeholder.com/100" },
-    { id: 4, name: "Daniel Thomas", rating: 4.6, jobs: 132, experience: 5, costPerHour: 30, location: "Eastside", description: "Expert in SAT preparation and test-taking strategies.", image: "https://via.placeholder.com/100" },
-    { id: 5, name: "Isabella Adams", rating: 4.9, jobs: 225, experience: 12, costPerHour: 50, location: "Downtown", description: "Professional tutor specializing in college-level courses.", image: "https://via.placeholder.com/100" },
-    { id: 6, name: "Chris Evans", rating: 4.7, jobs: 150, experience: 7, costPerHour: 40, location: "Southside", description: "Experienced in ESL and TOEFL preparation.", image: "https://via.placeholder.com/100" },
-  ],
-  maid: [
-    { id: 1, name: "Patricia Lee", rating: 4.7, jobs: 189, experience: 5, costPerHour: 30, location: "Eastside", description: "Professional house cleaner with attention to detail and eco-friendly cleaning methods.", image: "https://via.placeholder.com/100" },
-    { id: 2, name: "Nancy Gray", rating: 4.8, jobs: 210, experience: 7, costPerHour: 35, location: "Downtown", description: "Experienced in deep cleaning and organization services.", image: "https://via.placeholder.com/100" },
-    { id: 3, name: "James Brooks", rating: 4.5, jobs: 170, experience: 6, costPerHour: 28, location: "Westside", description: "Specialist in eco-friendly cleaning products and techniques.", image: "https://via.placeholder.com/100" },
-    { id: 4, name: "Rebecca Hall", rating: 4.6, jobs: 155, experience: 4, costPerHour: 32, location: "Southside", description: "Efficient and trustworthy, with a focus on customer satisfaction.", image: "https://via.placeholder.com/100" },
-    { id: 5, name: "Carolyn Knight", rating: 4.8, jobs: 195, experience: 8, costPerHour: 36, location: "Northside", description: "Detailed in organization and clutter management.", image: "https://via.placeholder.com/100" },
-    { id: 6, name: "Thomas Rivera", rating: 4.7, jobs: 175, experience: 6, costPerHour: 33, location: "Downtown", description: "Specializes in move-in and move-out cleaning.", image: "https://via.placeholder.com/100" },
-  ],
-};
-
-
 
 const ServiceDetailsPage = () => {
   const location = useLocation();
@@ -61,12 +15,34 @@ const ServiceDetailsPage = () => {
   });
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState('rating');
+  const [serviceData, setServiceData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Extract service type from URL query parameters
   const queryParams = new URLSearchParams(location.search);
   const serviceType = queryParams.get('service')?.toLowerCase() || 'electrician';
-  const serviceData = professionals[serviceType] || [];
   const capitalizedService = serviceType.charAt(0).toUpperCase() + serviceType.slice(1);
+
+  // Fetch data from the backend API
+  useEffect(() => {
+    const fetchProfessionals = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(`http://localhost:3001/api/professionals?service=${serviceType}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch professionals');
+        }
+        const data = await response.json();
+        setServiceData(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProfessionals();
+  }, [serviceType]);
 
   const handleFilterChange = (key, value) => {
     setFilters(prev => ({
@@ -78,14 +54,14 @@ const ServiceDetailsPage = () => {
   const filteredProfessionals = serviceData.filter(pro => {
     if (filters.priceRange !== 'all') {
       const [min, max] = filters.priceRange.split('-').map(Number);
-      if (pro.costPerHour < min || pro.costPerHour > max) return false;
+      if (pro.cost_per_hour < min || pro.cost_per_hour > max) return false;
     }
     if (filters.rating !== 'all' && pro.rating < Number(filters.rating)) return false;
     if (filters.location !== 'all' && pro.location !== filters.location) return false;
     return true;
   }).sort((a, b) => {
     if (sortBy === 'rating') return b.rating - a.rating;
-    if (sortBy === 'price') return a.costPerHour - b.costPerHour;
+    if (sortBy === 'price') return a.cost_per_hour - b.cost_per_hour;
     if (sortBy === 'experience') return b.experience - a.experience;
     return 0;
   });
@@ -100,8 +76,8 @@ const ServiceDetailsPage = () => {
       <div className="bg-white shadow-md">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center gap-4">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={handleBackClick}
               className="text-sm"
             >
@@ -116,8 +92,8 @@ const ServiceDetailsPage = () => {
       <div className="bg-white shadow-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-3">
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="flex items-center gap-2"
               onClick={() => setShowFilters(!showFilters)}
             >
@@ -194,72 +170,76 @@ const ServiceDetailsPage = () => {
 
       {/* Professionals Grid */}
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProfessionals.map((professional) => (
-            <div key={professional.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-              <div className="p-6">
-                <div className="flex items-start gap-4">
-                  <img
-                    src={professional.image}
-                    alt={professional.name}
-                    className="w-20 h-20 rounded-full object-cover"
-                  />
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold">{professional.name}</h3>
-                    <div className="flex items-center gap-2 mt-1">
-                      <Star className="h-4 w-4 text-yellow-400 fill-current" />
-                      <span className="font-medium">{professional.rating}</span>
-                      <span className="text-gray-500">({professional.jobs} jobs)</span>
-                    </div>
-                    <div className="flex items-center gap-1 text-gray-500 mt-1">
-                      <MapPin className="h-4 w-4" />
-                      <span>{professional.location}</span>
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredProfessionals.map((professional) => (
+              <div key={professional.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+                <div className="p-6">
+                  <div className="flex items-start gap-4">
+                    <img
+                      src={professional.image}
+                      alt={professional.name}
+                      className="w-20 h-20 rounded-full object-cover"
+                    />
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold">{professional.name}</h3>
+                      <div className="flex items-center gap-2 mt-1">
+                        <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                        <span className="font-medium">{professional.rating}</span>
+                        <span className="text-gray-500">({professional.jobs} jobs)</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-gray-500 mt-1">
+                        <MapPin className="h-4 w-4" />
+                        <span>{professional.location}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="mt-4">
-                  <p className="text-gray-600">{professional.description}</p>
-                  <div className="mt-4 flex items-center justify-between">
-                    <div>
-                      <span className="text-lg font-bold text-blue-600">${professional.costPerHour}</span>
-                      <span className="text-gray-500">/hr</span>
+                  <div className="mt-4">
+                    <p className="text-gray-600">{professional.description}</p>
+                    <div className="mt-4 flex items-center justify-between">
+                      <div>
+                        <span className="text-lg font-bold text-blue-600">${professional.cost_per_hour}</span>
+                        <span className="text-gray-500">/hr</span>
+                      </div>
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button>Book Now</Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Book {professional.name}</DialogTitle>
+                          </DialogHeader>
+                          <form className="space-y-4">
+                            <div>
+                              <Label htmlFor="date">Preferred Date</Label>
+                              <Input id="date" type="date" />
+                            </div>
+                            <div>
+                              <Label htmlFor="time">Preferred Time</Label>
+                              <Input id="time" type="time" />
+                            </div>
+                            <div>
+                              <Label htmlFor="description">Description of Work</Label>
+                              <textarea
+                                id="description"
+                                className="w-full p-2 border rounded-md min-h-[100px]"
+                                placeholder="Please describe the work you need done..."
+                              />
+                            </div>
+                            <Button type="submit" className="w-full">Confirm Booking</Button>
+                          </form>
+                        </DialogContent>
+                      </Dialog>
                     </div>
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button>Book Now</Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Book {professional.name}</DialogTitle>
-                        </DialogHeader>
-                        <form className="space-y-4">
-                          <div>
-                            <Label htmlFor="date">Preferred Date</Label>
-                            <Input id="date" type="date" />
-                          </div>
-                          <div>
-                            <Label htmlFor="time">Preferred Time</Label>
-                            <Input id="time" type="time" />
-                          </div>
-                          <div>
-                            <Label htmlFor="description">Description of Work</Label>
-                            <textarea
-                              id="description"
-                              className="w-full p-2 border rounded-md min-h-[100px]"
-                              placeholder="Please describe the work you need done..."
-                            />
-                          </div>
-                          <Button type="submit" className="w-full">Confirm Booking</Button>
-                        </form>
-                      </DialogContent>
-                    </Dialog>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
