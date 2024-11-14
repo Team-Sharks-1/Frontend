@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from './Button'; // Assuming Button component is available in the same directory
-import Input from './Input'; // Assuming Input component is available
+import { Button } from './Button';
+import Input from './Input';
 
 const UserRegister = () => {
   const navigate = useNavigate();
@@ -17,8 +17,6 @@ const UserRegister = () => {
     e.preventDefault();
     setError(null); // Clear any previous errors
     setSuccess(null); // Clear any previous success messages
-    console.log('Registering user with', { name, location, email, password });
-    navigate('/login/user'); // Redirect to login or dashboard as needed
 
     // Client-side validation
     if (!name || !location || !email || !phone || !password) {
@@ -62,7 +60,6 @@ const UserRegister = () => {
   };
 
   return (
-    
     <div className="min-h-screen flex flex-col items-center justify-center bg-blue-600 text-white px-4">
       <div className="bg-white text-center p-8 rounded-lg shadow-lg max-w-md w-full">
         <h1 className="text-2xl font-bold text-blue-600 mb-6">User Registration</h1>

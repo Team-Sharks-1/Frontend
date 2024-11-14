@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from './Button'; // Assuming Button component is available in the same directory
-import Input from './Input'; // Assuming Input component is available
+import './ProfessionalRegister.css'; // Import the CSS file
 
 function ProfessionalRegister() {
   const navigate = useNavigate();
@@ -52,106 +51,80 @@ function ProfessionalRegister() {
       setErrorMessage('An unexpected error occurred. Please try again later.');
     }
   };
-  
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-blue-600 text-white px-4">
-      <div className="bg-white text-center p-8 rounded-lg shadow-lg max-w-md w-full">
-        <h1 className="text-2xl font-bold text-blue-600 mb-6">Professional Registration</h1>
-        <form onSubmit={handleRegister} className="space-y-4">
-          <div>
-            <label htmlFor="serviceType" className="block text-left text-gray-600 mb-1">Type of Service</label>
-            <Input
-              type="text"
-              id="serviceType"
-              value={serviceType}
-              onChange={(e) => setServiceType(e.target.value)}
-              placeholder="Enter your service type (e.g., Plumber, Electrician)"
-              required
-              className="w-full"
-            />
-          </div>
-          <div>
-            <label htmlFor="name" className="block text-left text-gray-600 mb-1">Name</label>
-            <Input
-              type="text"
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Enter your name"
-              required
-              className="w-full"
-            />
-          </div>
-          <div>
-            <label htmlFor="address" className="block text-left text-gray-600 mb-1">Address</label>
-            <Input
-              type="text"
-              id="address"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              placeholder="Enter your address"
-              required
-              className="w-full"
-            />
-          </div>
-          <div>
-            <label htmlFor="email" className="block text-left text-gray-600 mb-1">Email Address</label>
-            <Input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              required
-              className="w-full"
-            />
-          </div>
-          <div>
-            <label htmlFor="phoneNumber" className="block text-left text-gray-600 mb-1">Phone Number</label>
-            <Input
-              type="tel"
-              id="phoneNumber"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              placeholder="Enter your phone number"
-              required
-              className="w-full"
-            />
-          </div>
-          <div>
-            <label htmlFor="serviceLicenseID" className="block text-left text-gray-600 mb-1">Service License ID</label>
-            <Input
-              type="text"
-              id="serviceLicenseID"
-              value={serviceLicenseID}
-              onChange={(e) => setServiceLicenseID(e.target.value)}
-              placeholder="Enter your service license ID"
-              required
-              className="w-full"
-            />
-          </div>
-          <div>
-            <label htmlFor="password" className="block text-left text-gray-600 mb-1">Password</label>
-            <Input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Create a password"
-              required
-              className="w-full"
-            />
-          </div>
-          <Button type="submit" className="w-full bg-blue-600 text-white hover:bg-blue-700 py-3">
-            Register
-          </Button>
-        </form>
-        <p className="text-sm text-gray-600 mt-4">
-          Already have an account? <span className="text-blue-600 cursor-pointer" onClick={() => navigate('/login-options')}>Login</span>
-        </p>
-      </div>
+    <div className="register-container">
+      <h2 className="register-title">Professional Registration</h2>
+      {errorMessage && <p className="error-message">{errorMessage}</p>} {/* Display error message if any */}
+      {successMessage && <p className="success-message">{successMessage}</p>} {/* Display success message if any */}
+      <form onSubmit={handleRegister} className="register-form">
+        <label>Type of Service</label>
+        <input
+          type="text"
+          name="serviceType"
+          value={formData.serviceType}
+          onChange={handleInputChange}
+          placeholder="Enter your service type (e.g., Plumber, Electrician)"
+          required
+        />
+        <label>Name</label>
+        <input
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleInputChange}
+          placeholder="Enter your name"
+          required
+        />
+        <label>Address</label>
+        <input
+          type="text"
+          name="address"
+          value={formData.address}
+          onChange={handleInputChange}
+          placeholder="Enter your address"
+          required
+        />
+        <label>Email Address</label>
+        <input
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleInputChange}
+          placeholder="Enter your email"
+          required
+        />
+        <label>Phone Number</label>
+        <input
+          type="text"
+          name="phoneNumber"
+          value={formData.phoneNumber}
+          onChange={handleInputChange}
+          placeholder="Enter your phone number"
+          required
+        />
+        <label>Service License ID</label>
+        <input
+          type="text"
+          name="licenseId"
+          value={formData.licenseId}
+          onChange={handleInputChange}
+          placeholder="Enter your service license ID"
+          required
+        />
+        <label>Password</label>
+        <input
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={handleInputChange}
+          placeholder="Create a password"
+          required
+        />
+        <button type="submit" className="register-button">Register</button>
+      </form>
     </div>
   );
-};
+}
 
 export default ProfessionalRegister;

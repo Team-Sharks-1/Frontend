@@ -1,0 +1,62 @@
+/* ProfessionalLogin.css */
+
+body {
+    background-color: #2563eb; /* Set background color */
+    font-family: Arial, sans-serif;
+  }
+  
+  .login-container {
+    background-color: #ffffff;
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  .login-title {
+    color: #2563eb;
+    font-size: 24px;
+    font-weight: bold; /* Make the title bold */
+    margin-bottom: 20px;
+  }
+  
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    text-align: left;
+  }
+  
+  .login-form label {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .login-form input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .login-button {
+    padding: 10px;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: #2563eb;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .login-button:hover {
+    background-color: #1e4bb8; /* Darker blue for hover effect */
+  }
+  
+  .login-form input::placeholder {
+    color: #999;
+  }
+      

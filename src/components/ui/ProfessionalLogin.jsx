@@ -1,61 +1,64 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from './Button'; // Assuming you have the Button component in the same directory
-import Input from './Input'; // Assuming Input component is available
+import './ProfessionalLogin.css'; // Import the CSS file
 
-const ProfessionalLogin = () => {
+function ProfessionalLogin() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState(''); // To display error messages if login fails
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    // Add logic to handle professional login, e.g., calling an API endpoint
-    console.log('Logging in professional with', email, password);
+  // Handle form submission
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await fetch('http://localhost:3001/api/login_professional', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
 
-    // Navigate to the professional dashboard or homepage after login
-    navigate('/professional-dashboard'); // Replace with the actual route for professionals
+      const data = await response.json();
+
+      if (response.ok) {
+        // If login is successful, navigate to the dashboard
+        navigate('/vendor/dashboard');
+      } else {
+        // If an error occurs, set an error message to display
+        setErrorMessage(data.error || 'Login failed. Please check your credentials.');
+      }
+    } catch (error) {
+      // Handle any network or unexpected errors
+      console.error('Error:', error);
+      setErrorMessage('An unexpected error occurred. Please try again later.');
+    }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-blue-600 text-white px-4">
-      <div className="bg-white text-center p-8 rounded-lg shadow-lg max-w-md w-full">
-        <h1 className="text-2xl font-bold text-blue-600 mb-6">Professional Login</h1>
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-left text-gray-600 mb-1">Email</label>
-            <Input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-              required
-              className="w-full"
-            />
-          </div>
-          <div>
-            <label htmlFor="password" className="block text-left text-gray-600 mb-1">Password</label>
-            <Input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-              required
-              className="w-full"
-            />
-          </div>
-          <Button type="submit" className="w-full bg-blue-600 text-white hover:bg-blue-700 py-3">
-            Login
-          </Button>
-        </form>
-        <p className="text-sm text-gray-600 mt-4">
-          Don't have an account? <span className="text-blue-600 cursor-pointer" onClick={() => navigate('/register-options')}>Register</span>
-        </p>
-      </div>
+    <div className="login-container">
+      <h2 className="login-title">Professional Login</h2>
+      {errorMessage && <p className="error-message">{errorMessage}</p>} {/* Display error message if any */}
+      <form onSubmit={handleLogin} className="login-form">
+        <label>Email</label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter your email"
+          required
+        />
+        <label>Password</label>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Enter your password"
+          required
+        />
+        <button type="submit" className="login-button">Login</button>
+      </form>
     </div>
   );
-};
+}
 
 export default ProfessionalLogin;
