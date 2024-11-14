@@ -23,7 +23,9 @@ function App() {
         <Route path="/login/professional" element={<ProfessionalLogin />} /> {/* Professional login route */}
         <Route path="/register/user" element={<UserRegister />} /> {/* User register route */}
         <Route path="/register/professional" element={<ProfessionalRegister />} /> {/* Professional register route */}
-        <Route path="/vendor/dashboard" element={<VendorDashboard />} /> {/* Vendor dashboard route */}
+        {/* Nested routes under VendorDashboard */}
+        <Route path="/vendor/*" element={<VendorDashboard />} />
+
       </Routes>
     </Router>
   );
