@@ -1,17 +1,47 @@
-import React, { useState } from 'react';
-import './Profile.css'; // Import the CSS file
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './Profile.css';
 
-function Profile() {
+function Profile({ userId }) {
   const [profile, setProfile] = useState({
     name: '',
+    rating: 5,
     jobs: 0,
     experience: '',
     cost_per_hour: '',
     location: '',
     description: '',
-    image: null,
     service_type: '',
+    image: null,
   });
+  const [existingImage, setExistingImage] = useState(null);
+
+  // Fetch user profile on component mount
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3001/api/get_professional/${userId}`);
+        const userData = response.data;
+
+        setProfile({
+          name: userData.name,
+          rating: userData.rating,
+          jobs: userData.jobs,
+          experience: userData.experience,
+          cost_per_hour: userData.cost_per_hour,
+          location: userData.location,
+          description: userData.description,
+          service_type: userData.service_type,
+          image: null, // Set to null to allow for a new upload
+        });
+        setExistingImage(userData.image); // Set existing image path if available
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+
+    fetchProfile();
+  }, [userId]);
 
   // Handler for input changes
   const handleChange = (e) => {
@@ -30,10 +60,39 @@ function Profile() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  // Handler for form submission to save updates
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Logic to save profile changes
-    console.log('Profile updated:', profile);
+
+    const formData = new FormData();
+    formData.append('name', profile.name);
+    formData.append('rating', profile.rating);
+    formData.append('jobs', profile.jobs);
+    formData.append('experience', profile.experience);
+    formData.append('cost_per_hour', profile.cost_per_hour);
+    formData.append('location', profile.location);
+    formData.append('description', profile.description);
+    formData.append('service_type', profile.service_type);
+    if (profile.image) formData.append('image', profile.image); // Append the new image if uploaded
+
+    try {
+      const response = await axios.post(`http://localhost:3001/api/update_professional/${userId}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      alert(response.data.message);
+      // Update the existing image preview if a new image was uploaded
+      if (profile.image) {
+        setExistingImage(URL.createObjectURL(profile.image));
+      }
+      // Clear the image field to allow for future uploads
+      setProfile((prevProfile) => ({ ...prevProfile, image: null }));
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert(`Error updating profile: ${error.response?.data?.message || 'Internal Server Error'}`);
+    }
   };
 
   return (
@@ -45,10 +104,17 @@ function Profile() {
         <div className="form-group">
           <label>Profile Image</label>
           <input type="file" onChange={handleFileChange} />
+          {existingImage && !profile.image && (
+            <img
+              src={existingImage}
+              alt="Existing Profile"
+              className="profile-picture-preview"
+            />
+          )}
           {profile.image && (
             <img
               src={URL.createObjectURL(profile.image)}
-              alt="Profile Preview"
+              alt="New Profile Preview"
               className="profile-picture-preview"
             />
           )}
@@ -66,11 +132,35 @@ function Profile() {
           />
         </div>
 
+        {/* Rating */}
+        <div className="form-group">
+          <label>Rating</label>
+          <input
+            type="number"
+            name="rating"
+            value={profile.rating}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* Jobs */}
+        <div className="form-group">
+          <label>Jobs</label>
+          <input
+            type="number"
+            name="jobs"
+            value={profile.jobs}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
         {/* Experience */}
         <div className="form-group">
           <label>Experience (in years)</label>
           <input
-            type="text"
+            type="number"
             name="experience"
             value={profile.experience}
             onChange={handleChange}
@@ -82,7 +172,7 @@ function Profile() {
         <div className="form-group">
           <label>Cost per Hour ($)</label>
           <input
-            type="text"
+            type="number"
             name="cost_per_hour"
             value={profile.cost_per_hour}
             onChange={handleChange}
