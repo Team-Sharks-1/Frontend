@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import Label from './ui/Label';
 import Input from './ui/Input';
 import { Button } from './ui/Button';
+import axios from 'axios';
 
 const ServiceDetailsPage = () => {
   const location = useLocation();
@@ -17,6 +18,11 @@ const ServiceDetailsPage = () => {
   const [sortBy, setSortBy] = useState('rating');
   const [serviceData, setServiceData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Form state
+  const [preferredDate, setPreferredDate] = useState('');
+  const [preferredTime, setPreferredTime] = useState('');
+  const [descriptionOfWork, setDescriptionOfWork] = useState('');
 
   // Extract service type from URL query parameters
   const queryParams = new URLSearchParams(location.search);
@@ -69,6 +75,27 @@ const ServiceDetailsPage = () => {
   const handleBackClick = () => {
     window.location.href = '/';
   };
+
+    // Form submission handler
+    const handleBookingSubmit = async (e, professionalId) => {
+      e.preventDefault();
+      
+      const bookingData = {
+        professionalId,
+        date: preferredDate,
+        time: preferredTime,
+        description: descriptionOfWork
+      };
+  
+      try {
+        const response = await axios.post('http://localhost:3001/api/book', bookingData);
+        console.log(response.data); // handle success (e.g., show confirmation message)
+        alert('Booking confirmed');
+      } catch (error) {
+        console.error('Error submitting booking:', error);
+        alert('Failed to confirm booking');
+      }
+    };  
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -212,14 +239,24 @@ const ServiceDetailsPage = () => {
                           <DialogHeader>
                             <DialogTitle>Book {professional.name}</DialogTitle>
                           </DialogHeader>
-                          <form className="space-y-4">
-                            <div>
+                          <form onSubmit={(e) => handleBookingSubmit(e, professional.id)} className="space-y-4">
+                          <div>
                               <Label htmlFor="date">Preferred Date</Label>
-                              <Input id="date" type="date" />
+                              <Input
+                                id="date"
+                                type="date"
+                                value={preferredDate}
+                                onChange={(e) => setPreferredDate(e.target.value)}
+                              />
                             </div>
                             <div>
                               <Label htmlFor="time">Preferred Time</Label>
-                              <Input id="time" type="time" />
+                              <Input
+                                id="time"
+                                type="time"
+                                value={preferredTime}
+                                onChange={(e) => setPreferredTime(e.target.value)}
+                              />
                             </div>
                             <div>
                               <Label htmlFor="description">Description of Work</Label>
@@ -227,6 +264,8 @@ const ServiceDetailsPage = () => {
                                 id="description"
                                 className="w-full p-2 border rounded-md min-h-[100px]"
                                 placeholder="Please describe the work you need done..."
+                                value={descriptionOfWork}
+                                onChange={(e) => setDescriptionOfWork(e.target.value)}
                               />
                             </div>
                             <Button type="submit" className="w-full">Confirm Booking</Button>
