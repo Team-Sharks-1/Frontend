@@ -40,6 +40,15 @@ function Profile({ userId }) {
       }
     };
 
+    const Profile = ({ userId }) => {
+      if (!userId) {
+        console.error("User ID is undefined or missing.");
+        return <div>Error: User ID is required</div>;  // Early return if userId is missing
+      }
+    
+      // The rest of your component code...
+    };    
+
     fetchProfile();
   }, [userId]);
 
@@ -63,7 +72,8 @@ function Profile({ userId }) {
   // Handler for form submission to save updates
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    // Prepare form data to send as multipart/form-data
     const formData = new FormData();
     formData.append('name', profile.name);
     formData.append('rating', profile.rating);
@@ -73,28 +83,38 @@ function Profile({ userId }) {
     formData.append('location', profile.location);
     formData.append('description', profile.description);
     formData.append('service_type', profile.service_type);
-    if (profile.image) formData.append('image', profile.image); // Append the new image if uploaded
-
+  
+    // Append the image if selected
+    if (profile.image) {
+      formData.append('image', profile.image); // This will send the image file to the backend
+    }
+  
     try {
-      const response = await axios.post(`http://localhost:3001/api/update_professional/${userId}`, formData, {
+      // Make POST request to create the professional profile
+      const response = await axios.post('http://localhost:3001/api/create_professional', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'multipart/form-data', // Important for file uploads
         },
       });
-
-      alert(response.data.message);
+  
+      // Success response handling
+      alert(response.data.message);  // You can display a success message from the server
+  
       // Update the existing image preview if a new image was uploaded
       if (profile.image) {
-        setExistingImage(URL.createObjectURL(profile.image));
+        setExistingImage(URL.createObjectURL(profile.image)); // Display uploaded image preview
       }
-      // Clear the image field to allow for future uploads
+  
+      // Clear form or reset image field for future uploads
       setProfile((prevProfile) => ({ ...prevProfile, image: null }));
+  
     } catch (error) {
+      // Error handling
       console.error('Error submitting form:', error);
       alert(`Error updating profile: ${error.response?.data?.message || 'Internal Server Error'}`);
     }
   };
-
+  
   return (
     <div className="profile-container">
       <h2>Profile Settings</h2>
