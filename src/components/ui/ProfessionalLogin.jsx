@@ -12,7 +12,7 @@ function ProfessionalLogin() {
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch('http://localhost:3001/api/login_professional', {
+      const response = await fetch('http://localhost:3001/api/login_professional', {  // Ensure the correct endpoint is used
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -21,7 +21,13 @@ function ProfessionalLogin() {
       const data = await response.json();
 
       if (response.ok) {
-        // If login is successful, navigate to the dashboard
+        // Store the JWT token in localStorage
+        localStorage.setItem('jwt_token', data.token);
+
+        // Optionally, store other user details like the ID or name if needed
+        // localStorage.setItem('user_id', data.professional.id); // Example if you want to store user info
+
+        // If login is successful, navigate to the dashboard or any other page
         navigate('/vendor/dashboard');
       } else {
         // If an error occurs, set an error message to display
