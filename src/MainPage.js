@@ -1,29 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Menu, User, LogIn, Home, Zap, Scissors, BookOpen, Wrench, Briefcase } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './components/ui/Dialog';
-import Label from './components/ui/Label';
-import Input from './components/ui/Input';
 import { Button } from './components/ui/Button';
-
-const services = [
-  { name: 'Electrician', icon: Zap, route: 'electrician' },
-  { name: 'Gardener', icon: Scissors, route: 'gardener' },
-  { name: 'Tutor', icon: BookOpen, route: 'tutor' },
-  { name: 'Plumber', icon: Wrench, route: 'plumber' },
-  { name: 'Maid', icon: Briefcase, route: 'maid' }
-];
+import { X, Menu, User, LogIn, Home, Zap, Scissors, BookOpen, Wrench, Briefcase } from 'lucide-react';
 
 const MainPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
-  const handleLoginClick = () => {
-    navigate('/login-options');
+  // Check login status and verify session
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsLoggedIn(true); // User is logged in
+    } else {
+      setIsLoggedIn(false); // User is not logged in
+    }
+  }, []);
+
+  const services = [
+    { name: 'Electrician', icon: Zap, route: 'electrician' },
+    { name: 'Gardener', icon: Scissors, route: 'gardener' },
+    { name: 'Tutor', icon: BookOpen, route: 'tutor' },
+    { name: 'Plumber', icon: Wrench, route: 'plumber' },
+    { name: 'Maid', icon: Briefcase, route: 'maid' }
+  ];
+
+  // Handle logout
+  const handleLogout = () => {
+    localStorage.removeItem('token'); // Remove token from localStorage
+    setIsLoggedIn(false); // Update logged-in state
+    navigate('/login-options'); // Redirect to login page
   };
 
-  const handleRegisterClick = () => {
-    navigate('/register-options');
+  // Toggle profile dropdown
+  const handleProfileDropdownToggle = () => {
+    setIsProfileDropdownOpen(!isProfileDropdownOpen);
   };
 
   return (
@@ -38,9 +51,30 @@ const MainPage = () => {
             <a href="#services" className="text-gray-600 hover:text-blue-600">Services</a>
             <a href="#how-it-works" className="text-gray-600 hover:text-blue-600">How It Works</a>
             <a href="#about" className="text-gray-600 hover:text-blue-600">About</a>
-            <Button variant="outline" onClick={handleLoginClick}>Login</Button>
-            <Button onClick={handleRegisterClick}>Register</Button>
+
+            {isLoggedIn ? (
+              <div className="relative">
+                <Button variant="outline" onClick={handleProfileDropdownToggle}>
+                  Profile
+                </Button>
+                {isProfileDropdownOpen && (
+                  <div className="absolute right-0 bg-white shadow-md rounded-lg mt-2 w-48">
+                    <button className="block px-4 py-2 text-gray-700 w-full text-left" onClick={() => navigate('/profile')}>Profile</button>
+                    <button className="block px-4 py-2 text-gray-700 w-full text-left" onClick={() => navigate('/bookings')}>My Bookings</button>
+                    <button className="block px-4 py-2 text-gray-700 w-full text-left" onClick={() => navigate('/subscription')}>My Subscription</button>
+                    <button className="block px-4 py-2 text-gray-700 w-full text-left" onClick={() => navigate('/settings')}>Settings</button>
+                    <button className="block px-4 py-2 text-red-600 w-full text-left" onClick={handleLogout}>Logout</button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <>
+                <Button variant="outline" onClick={() => navigate('/login-options')}>Login</Button>
+                <Button onClick={() => navigate('/register-options')}>Register</Button>
+              </>
+            )}
           </nav>
+
           <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -55,14 +89,16 @@ const MainPage = () => {
       </header>
 
       <main>
+        {/* Hero Section */}
         <section className="bg-blue-600 text-white py-20">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-4xl font-bold mb-4">Your One-Stop Solution for Home Services</h2>
             <p className="text-xl mb-8">Connect with verified contractors through our streamlined booking system</p>
-            <Button size="lg">Book a Service</Button>
+            <Button size="lg" onClick={() => navigate('/book-a-service')}>Book a Service</Button>
           </div>
         </section>
 
+        {/* Services Section */}
         <section id="services" className="py-16">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12">Our Services</h2>
@@ -83,6 +119,7 @@ const MainPage = () => {
           </div>
         </section>
 
+        {/* How It Works Section */}
         <section id="how-it-works" className="bg-gray-50 py-16">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
@@ -112,6 +149,7 @@ const MainPage = () => {
           </div>
         </section>
 
+        {/* About Section */}
         <section id="about" className="py-16">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl font-bold mb-4">About Us</h2>
@@ -120,11 +158,12 @@ const MainPage = () => {
               Our mission is to simplify the process of finding quality home services while ensuring
               that our users have the best experience possible.
             </p>
-            <Button>Learn More</Button>
+            <Button onClick={() => navigate('/about-us')}>Learn More</Button>
           </div>
         </section>
       </main>
 
+      {/* Footer */}
       <footer className="bg-white shadow-md py-4">
         <div className="container mx-auto px-4 text-center">
           <p className="text-gray-600">© 2024 UrbanConnect. All rights reserved.</p>

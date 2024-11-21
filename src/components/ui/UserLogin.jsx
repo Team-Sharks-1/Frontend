@@ -20,13 +20,16 @@ const UserLogin = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
-      
+
       if (!response.ok) {
         throw new Error('Invalid email or password');
       }
 
-      // On successful login, navigate to the dashboard
-      navigate('/dashboard');
+      const data = await response.json();
+      localStorage.setItem('token', data.token); // Save token in localStorage
+
+      // On successful login, navigate to the main page
+      navigate('/');
     } catch (err) {
       setError(err.message); // Set the error message to display
     }
