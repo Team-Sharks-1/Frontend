@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from './components/ui/Button';
 import { X, Menu, User, LogIn, Home, Zap, Scissors, BookOpen, Wrench, Briefcase } from 'lucide-react';
+import Profile from './components/ui/userdashboard/ProfilePage'; 
+import Bookings from './components/ui/userdashboard/BookingsPage'; 
+import Subscription from './components/ui/userdashboard/SubscriptionPage'; 
+import Settings from './components/ui/userdashboard/SettingsPage'; 
 
 const MainPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -94,7 +98,7 @@ const MainPage = () => {
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-4xl font-bold mb-4">Your One-Stop Solution for Home Services</h2>
             <p className="text-xl mb-8">Connect with verified contractors through our streamlined booking system</p>
-            <Button size="lg" onClick={() => navigate('/book-a-service')}>Book a Service</Button>
+            <Button size="lg" onClick={() => navigate('/')}>Book a Service</Button>
           </div>
         </section>
 
@@ -172,5 +176,6 @@ const MainPage = () => {
     </div>
   );
 };
+
 
 export default MainPage;
