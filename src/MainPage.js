@@ -96,7 +96,7 @@ const MainPage = () => {
         {/* Hero Section */}
         <section className="bg-blue-600 text-white py-20">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-4xl font-bold mb-4">Your One-Stop Solution for Home Services</h2>
+            <h2 className="text-4xl text-white font-bold mb-4">Your One-Stop Solution for Home Services</h2>
             <p className="text-xl mb-8">Connect with verified contractors through our streamlined booking system</p>
             <Button size="lg" onClick={() => navigate('/')}>Book a Service</Button>
           </div>
