@@ -5,11 +5,13 @@ import MainPage from "./MainPage";
 import ServiceDetailsPage from "./components/ServiceDetailsPage";
 import LoginOptions from "./components/ui/LoginOptions";
 import RegisterOptions from "./components/ui/RegisterOptions";
-import UserLogin from "./components/ui/UserLogin"; // Import UserLogin
-import ProfessionalLogin from "./components/ui/ProfessionalLogin"; // Import ProfessionalLogin
-import UserRegister from "./components/ui/UserRegister"; // Import UserRegister
-import ProfessionalRegister from "./components/ui/ProfessionalRegister"; // Import ProfessionalRegister
-import VendorDashboard from "./components/ui/VendorDashboard"; // Import VendorDashboard
+import UserLogin from "./components/ui/UserLogin";
+import ProfessionalLogin from "./components/ui/ProfessionalLogin";
+import UserRegister from "./components/ui/UserRegister";
+import ProfessionalRegister from "./components/ui/ProfessionalRegister";
+import VendorDashboard from "./components/ui/VendorDashboard";
+import AdminDashboard from "./components/ui/AdminDashboard"; // Import AdminDashboard
+import ProtectedRoute from "./components/ui/ProtectedRoute"; // Import ProtectedRoute
 
 function App() {
   return (
@@ -19,13 +21,21 @@ function App() {
         <Route path="/service-details" element={<ServiceDetailsPage />} />
         <Route path="/login-options" element={<LoginOptions />} />
         <Route path="/register-options" element={<RegisterOptions />} />
-        <Route path="/login/user" element={<UserLogin />} /> {/* User login route */}
-        <Route path="/login/professional" element={<ProfessionalLogin />} /> {/* Professional login route */}
-        <Route path="/register/user" element={<UserRegister />} /> {/* User register route */}
-        <Route path="/register/professional" element={<ProfessionalRegister />} /> {/* Professional register route */}
-        {/* Nested routes under VendorDashboard */}
+        <Route path="/login/user" element={<UserLogin />} />
+        <Route path="/login/professional" element={<ProfessionalLogin />} />
+        <Route path="/register/user" element={<UserRegister />} />
+        <Route path="/register/professional" element={<ProfessionalRegister />} />
         <Route path="/vendor/*" element={<VendorDashboard />} />
-
+        
+        {/* Protect Admin Dashboard route */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );
