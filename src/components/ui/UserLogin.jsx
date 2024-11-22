@@ -13,7 +13,7 @@ const UserLogin = () => {
     e.preventDefault();
     setError(null); // Clear any previous error
     // Check for hardcoded admin credentials
-    if (email === 'gajuparikshek@gmail.com' && password === '12345678') {
+    if (email === 'admin@gmail.com' && password === '123456789') {
       // Save a fake token and role in localStorage
       localStorage.setItem('token', 'admin-token');
       localStorage.setItem('role', 'admin');
