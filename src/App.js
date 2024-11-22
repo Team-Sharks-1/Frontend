@@ -10,6 +10,8 @@ import ProfessionalLogin from "./components/ui/ProfessionalLogin"; // Import Pro
 import UserRegister from "./components/ui/UserRegister"; // Import UserRegister
 import ProfessionalRegister from "./components/ui/ProfessionalRegister"; // Import ProfessionalRegister
 import VendorDashboard from "./components/ui/VendorDashboard"; // Updated import path for VendorDashboard
+import AdminDashboard from "./components/ui/AdminDashboard"; // Import AdminDashboard
+import ProtectedRoute from "./components/ui/ProtectedRoute"; // Import ProtectedRoute
 
 // Import the user dashboard components
 import Profile from "./components/ui/userdashboard/ProfilePage"; // Updated path for Profile
@@ -41,6 +43,16 @@ function App() {
         <Route path="/bookings" element={<Bookings />} />
         <Route path="/subscription" element={<Subscription />} />
         <Route path="/settings" element={<Settings />} />
+
+        {/* Protect Admin Dashboard route */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );
