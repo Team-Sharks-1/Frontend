@@ -12,29 +12,34 @@ const UserLogin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(null); // Clear any previous error
-
+    // Check for hardcoded admin credentials
+    if (email === 'gajuparikshek@gmail.com' && password === '12345678') {
+      // Save a fake token and role in localStorage
+      localStorage.setItem('token', 'admin-token');
+      localStorage.setItem('role', 'admin');
+      // Redirect to the dashboard
+      navigate('/dashboard');
+      return;
+    }
+    // Continue with API call for other users
     try {
-      // Simulate an API call
       const response = await fetch('http://localhost:3001/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
-
       if (!response.ok) {
         throw new Error('Invalid email or password');
       }
-
       const data = await response.json();
       localStorage.setItem('token', data.token); // Save token in localStorage
-
-      // On successful login, navigate to the main page
+      // Redirect to the user-specific dashboard or home
       navigate('/');
     } catch (err) {
       setError(err.message); // Set the error message to display
     }
   };
-
+  
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-blue-600 text-white px-4">
       <div className="bg-white text-center p-8 rounded-lg shadow-lg max-w-md w-full">
