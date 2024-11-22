@@ -60,5 +60,9 @@
   }
   
   .error-message {
-    color: black
+    color: #000000
+  }
+
+  .success-message {
+    color: #000000;
   }
