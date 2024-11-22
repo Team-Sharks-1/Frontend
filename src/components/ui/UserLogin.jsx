@@ -13,8 +13,19 @@ const UserLogin = () => {
     e.preventDefault();
     setError(null); // Clear any previous error
 
+    // Check for hardcoded admin credentials
+    if (email === 'gajuparikshek@gmail.com' && password === '12345678') {
+      // Save a fake token and role in localStorage
+      localStorage.setItem('token', 'admin-token');
+      localStorage.setItem('role', 'admin');
+
+      // Redirect to the dashboard
+      navigate('/dashboard');
+      return;
+    }
+
+    // Continue with API call for other users
     try {
-      // Simulate an API call
       const response = await fetch('http://localhost:3001/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -28,7 +39,7 @@ const UserLogin = () => {
       const data = await response.json();
       localStorage.setItem('token', data.token); // Save token in localStorage
 
-      // On successful login, navigate to the main page
+      // Redirect to the user-specific dashboard or home
       navigate('/');
     } catch (err) {
       setError(err.message); // Set the error message to display
