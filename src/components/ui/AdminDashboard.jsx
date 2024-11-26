@@ -2,17 +2,11 @@ import React from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import ManageUsers from './ManageUsers';
 import ManageBookings from './ManageBookings';
-import ManageServices from './ManageServices';
-import Reports from './Reports';
-import Settings from './Settings';
+import ManageProfessionals from './ManageProfessionals';
 import Logout from './Logout';
 import './AdminDashboard.css';
-
-
-
 function AdminDashboard() {
   const location = useLocation();
-
   return (
     <div className="dashboard-container">
       <aside className="sidebar">
@@ -78,7 +72,6 @@ function AdminDashboard() {
           </ul>
         </nav>
       </aside>
-
       <main className="dashboard-content">
         {/* Conditionally render the welcome message only on the dashboard page */}
         {location.pathname === '/dashboard' && (
@@ -87,23 +80,18 @@ function AdminDashboard() {
             <p>Oversee the platform, manage users, bookings, and generate reports here.</p>
           </header>
         )}
-
         <Routes>
           <Route path="dashboard" element={<DashboardCards />} />
           <Route path="manage-users" element={<ManageUsers />} />
           <Route path="manage-bookings" element={<ManageBookings />} />
-          <Route path="manage-services" element={<ManageServices />} />
-          <Route path="reports" element={<Reports />} />
-          <Route path="settings" element={<Settings />} />
+          <Route path="manage-professionals" element={<ManageProfessionals />} />
           <Route path="logout" element={<Logout />} />
         </Routes>
       </main>
     </div>
   );
 }
-
 export default AdminDashboard;
-
 function DashboardCards() {
   return (
     <section className="dashboard-cards">
