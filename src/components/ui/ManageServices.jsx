@@ -1,36 +1,36 @@
-import React, { useState, useEffect } from 'react';
+// ManageServices.jsx
+import React from "react";
 
-function ManageServices() {
-  const [services, setServices] = useState([]);
-
-  useEffect(() => {
-    // Simulate fetching services (you can replace this with an API call)
-    const fetchedServices = [
-      { id: 1, name: 'Plumbing', description: 'Professional plumbing services' },
-      { id: 2, name: 'Electrical', description: 'Certified electricians' },
+const ManageServices = () => {
+    const services = [
+        { id: 1, name: "Cleaning", price: "$50" },
+        { id: 2, name: "Plumbing", price: "$75" },
+        { id: 3, name: "Tutor Services", price: "$40/hour" },
     ];
-    setServices(fetchedServices);
-  }, []);
 
-  const handleDelete = (id) => {
-    // Handle deletion (you can replace this with an API call)
-    setServices(services.filter((service) => service.id !== id));
-  };
-
-  return (
-    <div>
-      <h2>Manage Services</h2>
-      <ul>
-        {services.map((service) => (
-          <li key={service.id}>
-            <h3>{service.name}</h3>
-            <p>{service.description}</p>
-            <button onClick={() => handleDelete(service.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+    return (
+        <div>
+            <h1>Manage Services</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {services.map((service) => (
+                        <tr key={service.id}>
+                            <td>{service.id}</td>
+                            <td>{service.name}</td>
+                            <td>{service.price}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
+};
 
 export default ManageServices;
