@@ -98,7 +98,7 @@ const MainPage = () => {
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-4xl text-white font-bold mb-4">Your One-Stop Solution for Home Services</h2>
             <p className="text-xl mb-8">Connect with verified contractors through our streamlined booking system</p>
-            <Button size="lg" onClick={() => navigate('/')}>Book a Service</Button>
+            <Button size="lg" onClick={() => navigate('/BookingsPage')}>Book a Service</Button>
           </div>
         </section>
 

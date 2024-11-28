@@ -18,6 +18,7 @@ import Profile from "./components/ui/userdashboard/ProfilePage"; // Updated path
 import Bookings from "./components/ui/userdashboard/BookingsPage"; // Updated path for Bookings
 import Subscription from "./components/ui/userdashboard/SubscriptionPage"; // Updated path for Subscription
 import Settings from "./components/ui/userdashboard/SettingsPage"; // Updated path for Settings
+import BookingsPage from "./components/ui/BookingsPage"; // Updated path for Booking page
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
         <Route path="/bookings" element={<Bookings />} />
         <Route path="/subscription" element={<Subscription />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/BookingsPage" element={<BookingsPage />} />
 
         {/* Protect Admin Dashboard route */}
         <Route
