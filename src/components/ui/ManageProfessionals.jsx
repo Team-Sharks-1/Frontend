@@ -1,6 +1,7 @@
 import React from "react";
 
 const ManageProfessionals = () => {
+    console.log("ManageProfessionals component rendered!");
     const professionals = [
         { id: 1, name: "Alice Johnson", profession: "Tutor", contact: "alice@example.com", rating: 4.5 },
         { id: 2, name: "Bob Smith", profession: "Plumber", contact: "bob@example.com", rating: 4.2 },
@@ -9,30 +10,32 @@ const ManageProfessionals = () => {
     ];
 
     return (
-        <div>
-            <h1>Manage Professionals</h1>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Profession</th>
-                        <th>Contact</th>
-                        <th>Rating</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {professionals.map((professional) => (
-                        <tr key={professional.id}>
-                            <td>{professional.id}</td>
-                            <td>{professional.name}</td>
-                            <td>{professional.profession}</td>
-                            <td>{professional.contact}</td>
-                            <td>{professional.rating}</td>
+        <div className="container mx-auto px-4 py-16">
+            <h1 className="text-3xl font-bold mb-8 text-white">Manage Professionals</h1>
+            <div className="bg-white shadow-md p-6 rounded-lg">
+                <table className="w-full table-auto border-collapse">
+                    <thead>
+                        <tr className="bg-gray-200 text-left text-gray-800">
+                            <th className="px-4 py-2 border">ID</th>
+                            <th className="px-4 py-2 border">Name</th>
+                            <th className="px-4 py-2 border">Profession</th>
+                            <th className="px-4 py-2 border">Contact</th>
+                            <th className="px-4 py-2 border">Rating</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {professionals.map((professional) => (
+                            <tr key={professional.id} className="hover:bg-gray-100 text-gray-700">
+                                <td className="px-4 py-2 border">{professional.id}</td>
+                                <td className="px-4 py-2 border">{professional.name}</td>
+                                <td className="px-4 py-2 border">{professional.profession}</td>
+                                <td className="px-4 py-2 border">{professional.contact}</td>
+                                <td className="px-4 py-2 border">{professional.rating}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 };
