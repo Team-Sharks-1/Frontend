@@ -12,6 +12,7 @@ function Profile({ userId }) {
     location: '',
     description: '',
     service_type: '',
+    email: '', // New email state
     image: null,
   });
   const [existingImage, setExistingImage] = useState(null);
@@ -32,6 +33,7 @@ function Profile({ userId }) {
           location: userData.location,
           description: userData.description,
           service_type: userData.service_type,
+          email: userData.email || '', // Add email data if available
           image: null, // Set to null to allow for a new upload
         });
         setExistingImage(userData.image); // Set existing image path if available
@@ -40,16 +42,12 @@ function Profile({ userId }) {
       }
     };
 
-    const Profile = ({ userId }) => {
-      if (!userId) {
-        console.error("User ID is undefined or missing.");
-        return <div>Error: User ID is required</div>;  // Early return if userId is missing
-      }
-    
-      // The rest of your component code...
-    };    
+    if (userId) {
+      fetchProfile();
+    } else {
+      console.error('User ID is undefined or missing.');
+    }
 
-    fetchProfile();
   }, [userId]);
 
   // Handler for input changes
@@ -83,6 +81,7 @@ function Profile({ userId }) {
     formData.append('location', profile.location);
     formData.append('description', profile.description);
     formData.append('service_type', profile.service_type);
+    formData.append('email', profile.email);  // Include email in the form data
   
     // Append the image if selected
     if (profile.image) {
@@ -231,6 +230,18 @@ function Profile({ userId }) {
             type="text"
             name="service_type"
             value={profile.service_type}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        {/* Email */}
+        <div className="form-group">
+          <label>Email</label>
+          <input
+            type="email"
+            name="email"
+            value={profile.email}
             onChange={handleChange}
             required
           />

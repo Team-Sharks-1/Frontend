@@ -1,13 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const ManageProfessionals = () => {
     console.log("ManageProfessionals component rendered!");
-    const professionals = [
-        { id: 1, name: "Alice Johnson", profession: "Tutor", contact: "alice@example.com", rating: 4.5 },
-        { id: 2, name: "Bob Smith", profession: "Plumber", contact: "bob@example.com", rating: 4.2 },
-        { id: 3, name: "Charlie Brown", profession: "Electrician", contact: "charlie@example.com", rating: 4.8 },
-        { id: 4, name: "Diana Prince", profession: "Cleaner", contact: "diana@example.com", rating: 4.6 },
-    ];
+
+    const [professionals, setProfessionals] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    // Fetch professionals' data from the new API endpoint
+    useEffect(() => {
+        const fetchProfessionals = async () => {
+            try {
+                const response = await fetch("http://localhost:3001/api/professionaldetails");
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                const data = await response.json();
+                setProfessionals(data); // Set state with the data
+                setLoading(false); // Stop loading once data is fetched
+            } catch (err) {
+                setError(err.message); // Handle any error
+                setLoading(false);
+            }
+        };
+
+        fetchProfessionals();
+    }, []);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
 
     return (
         <div className="container mx-auto px-4 py-16">
@@ -19,8 +45,7 @@ const ManageProfessionals = () => {
                             <th className="px-4 py-2 border">ID</th>
                             <th className="px-4 py-2 border">Name</th>
                             <th className="px-4 py-2 border">Profession</th>
-                            <th className="px-4 py-2 border">Contact</th>
-                            <th className="px-4 py-2 border">Rating</th>
+                            <th className="px-4 py-2 border">Contact (Email)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -30,7 +55,6 @@ const ManageProfessionals = () => {
                                 <td className="px-4 py-2 border">{professional.name}</td>
                                 <td className="px-4 py-2 border">{professional.profession}</td>
                                 <td className="px-4 py-2 border">{professional.contact}</td>
-                                <td className="px-4 py-2 border">{professional.rating}</td>
                             </tr>
                         ))}
                     </tbody>
