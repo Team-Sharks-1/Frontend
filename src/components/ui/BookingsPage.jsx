@@ -30,6 +30,7 @@ const BookingForm = () => {
   const [selectedTime, setSelectedTime] = useState('');
   const [selectedPrice, setSelectedPrice] = useState(''); // Store selected price
   const [selectedLocation, setSelectedLocation] = useState('');
+  const [selectedDate, setSelectedDate] = useState(''); // Store selected date
   const [userDetails, setUserDetails] = useState({
     contact: '',
     additionalDetails: '', // This will store additional details (description)
@@ -63,12 +64,13 @@ const BookingForm = () => {
   };
 
   const handleBookingConfirm = async () => {
-    // Ensure all fields are filled in, including the price
+    // Ensure all fields are filled in, including the price and date
     if (
       !selectedService ||
       !selectedTime ||
       !selectedLocation ||
       !selectedPrice || // Ensure price is selected
+      !selectedDate || // Ensure date is selected
       !userDetails.contact
     ) {
       alert('Please fill in all required fields.');
@@ -85,7 +87,7 @@ const BookingForm = () => {
     const bookingDetails = {
       service: selectedService,
       time: convertedTime, // Send the converted time in HH:mm:ss format
-      date: new Date().toISOString().split('T')[0], // Current date
+      date: selectedDate, // Selected date
       location: selectedLocation,
       contact: userDetails.contact, // Move contact here
       description: description, // Move description here
@@ -123,6 +125,18 @@ const BookingForm = () => {
     priceOptions.push(i);
   }
 
+  // Generate the minimum and maximum allowed dates for the date picker
+  const getTodayDate = () => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  };
+
+  const getMaxDate = () => {
+    const today = new Date();
+    today.setMonth(today.getMonth() + 3); // Add 3 months
+    return today.toISOString().split('T')[0];
+  };
+
   return (
     <div className="booking-form">
       <h2>Book a Service</h2>
@@ -143,6 +157,20 @@ const BookingForm = () => {
             </option>
           ))}
         </select>
+      </div>
+
+      {/* Date Picker */}
+      <div className="form-section">
+        <label htmlFor="date">Select Date:</label>
+        <input
+          type="date"
+          id="date"
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.target.value)}
+          min={getTodayDate()}
+          max={getMaxDate()}
+          required
+        />
       </div>
 
       {/* Time Dropdown */}

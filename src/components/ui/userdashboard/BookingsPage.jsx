@@ -18,27 +18,33 @@ const BookingsPage = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        // Assuming the user is authenticated with a JWT token in localStorage
         const token = localStorage.getItem('token');
-        
-        // Fetch bookings from the backend API
         const response = await axios.get('http://localhost:3001/api/user_bookings', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-
+  
         const allBookings = response.data;
-
-        // Get the current date for comparison
+  
+        // Get the current date without the time
         const currentDate = new Date();
-
+        currentDate.setHours(0, 0, 0, 0); // Reset time to 00:00:00
+  
         // Filter future or current bookings for currentBookings
-        const futureBookings = allBookings.filter((booking) => new Date(booking.date) >= currentDate);
-
+        const futureBookings = allBookings.filter((booking) => {
+          const bookingDate = new Date(booking.date);
+          bookingDate.setHours(0, 0, 0, 0); // Reset booking date's time to 00:00:00
+          return bookingDate >= currentDate;
+        });
+  
         // Filter past bookings for previousBookings
-        const pastBookings = allBookings.filter((booking) => new Date(booking.date) < currentDate);
-
+        const pastBookings = allBookings.filter((booking) => {
+          const bookingDate = new Date(booking.date);
+          bookingDate.setHours(0, 0, 0, 0); // Reset booking date's time to 00:00:00
+          return bookingDate < currentDate;
+        });
+  
         setCurrentBookings(futureBookings);
         setPreviousBookings(pastBookings);
       } catch (error) {
@@ -46,9 +52,10 @@ const BookingsPage = () => {
         alert('No Booking Found.');
       }
     };
-
+  
     fetchBookings();
   }, []);
+  
 
   return (
     <div className="container mx-auto px-4 py-16">
