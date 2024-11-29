@@ -1,115 +1,92 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const BookingsPage = () => {
   const [currentBookings, setCurrentBookings] = useState([]);
   const [previousBookings, setPreviousBookings] = useState([]);
 
-  // Fetch booking data (replace with actual API calls)
+  // Function to format the date to "YYYY-MM-DD"
+  const formatDate = (date) => {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  // Fetch booking data from API
   useEffect(() => {
-    const allBookings = [
-      {
-        service: 'Electrician',
-        date: '2024-12-01',
-        time: '10:00 AM',
-        status: 'Confirmed',
-        id: 1,
-      },
-      {
-        service: 'Plumber',
-        date: '2024-12-10',
-        time: '2:00 PM',
-        status: 'Pending',
-        id: 2,
-      },
-      // Previous bookings
-      {
-        service: 'Maid',
-        date: '2024-11-05',
-        time: '9:00 AM',
-        status: 'Completed',
-        id: 3,
-      },
-      {
-        service: 'Gardener',
-        date: '2024-11-10',
-        time: '3:00 PM',
-        status: 'Cancelled',
-        id: 4,
-      },
-    ];
+    const fetchBookings = async () => {
+      try {
+        // Assuming the user is authenticated with a JWT token in localStorage
+        const token = localStorage.getItem('token');
+        
+        // Fetch bookings from the backend API
+        const response = await axios.get('http://localhost:3001/api/user_bookings', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-    // Separate current and previous bookings based on date
-    const currentDate = new Date();
-    const futureBookings = allBookings.filter((booking) => new Date(booking.date) > currentDate);
-    const pastBookings = allBookings.filter((booking) => new Date(booking.date) <= currentDate);
+        const allBookings = response.data;
 
-    setCurrentBookings(futureBookings);
-    setPreviousBookings(pastBookings);
+        // Get the current date for comparison
+        const currentDate = new Date();
+
+        // Filter future or current bookings for currentBookings
+        const futureBookings = allBookings.filter((booking) => new Date(booking.date) >= currentDate);
+
+        // Filter past bookings for previousBookings
+        const pastBookings = allBookings.filter((booking) => new Date(booking.date) < currentDate);
+
+        setCurrentBookings(futureBookings);
+        setPreviousBookings(pastBookings);
+      } catch (error) {
+        console.error('Error fetching bookings:', error);
+        alert('Failed to fetch bookings. Please try again later.');
+      }
+    };
+
+    fetchBookings();
   }, []);
-
-  // Handle rescheduling
-  const handleReschedule = (bookingId) => {
-    alert(`Reschedule the booking with ID: ${bookingId}`);
-    // Implement the logic to reschedule the booking (open a date/time picker, etc.)
-  };
-
-  // Handle canceling a booking
-  const handleCancel = (bookingId) => {
-    alert(`Cancel the booking with ID: ${bookingId}`);
-    // Implement the logic to cancel the booking
-  };
 
   return (
     <div className="container mx-auto px-4 py-16">
       <h1 className="text-3xl font-bold mb-8">My Bookings</h1>
 
       {/* Current Bookings Section */}
-      {currentBookings.length > 0 ? (
-        <div className="bg-white shadow-md p-6 rounded-lg mb-8">
-          <h2 className="text-xl font-semibold mb-4">Current Bookings</h2>
-          {currentBookings.map((booking) => (
+      <div className="bg-white shadow-md p-6 rounded-lg mb-8">
+        <h2 className="text-xl font-semibold mb-4 text-blue-600">Current Bookings</h2>
+        {currentBookings.length > 0 ? (
+          currentBookings.map((booking) => (
             <div key={booking.id} className="border-b py-4">
-              <p><strong>Service:</strong> {booking.service}</p>
-              <p><strong>Date:</strong> {booking.date}</p>
+              <p><strong>Service:</strong> {booking.service_type.charAt(0).toUpperCase() + booking.service_type.slice(1)}</p> {/* Capitalized first letter */}
+              <p><strong>Date:</strong> {formatDate(booking.date)}</p> {/* Cleaned date */}
               <p><strong>Time:</strong> {booking.time}</p>
-              <p><strong>Status:</strong> {booking.status}</p>
-              <div className="mt-4 flex space-x-4">
-                <button
-                  onClick={() => handleReschedule(booking.id)}
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg"
-                >
-                  Reschedule
-                </button>
-                <button
-                  onClick={() => handleCancel(booking.id)}
-                  className="bg-red-600 text-white px-4 py-2 rounded-lg"
-                >
-                  Cancel
-                </button>
-              </div>
+              <p><strong>Status:</strong> {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}</p> {/* Capitalized status */}
             </div>
-          ))}
-        </div>
-      ) : (
-        <p>You have no upcoming bookings.</p>
-      )}
+          ))
+        ) : (
+          <p>You have no upcoming bookings.</p>
+        )}
+      </div>
 
       {/* Previous Bookings Section */}
-      {previousBookings.length > 0 ? (
-        <div className="bg-white shadow-md p-6 rounded-lg">
-          <h2 className="text-xl font-semibold mb-4">Previous Bookings</h2>
-          {previousBookings.map((booking) => (
+      <div className="bg-white shadow-md p-6 rounded-lg">
+        <h2 className="text-xl font-semibold mb-4 text-blue-600">Previous Bookings</h2>
+        {previousBookings.length > 0 ? (
+          previousBookings.map((booking) => (
             <div key={booking.id} className="border-b py-4">
-              <p><strong>Service:</strong> {booking.service}</p>
-              <p><strong>Date:</strong> {booking.date}</p>
+              <p><strong>Service:</strong> {booking.service_type.charAt(0).toUpperCase() + booking.service_type.slice(1)}</p> {/* Capitalized first letter */}
+              <p><strong>Date:</strong> {formatDate(booking.date)}</p> {/* Cleaned date */}
               <p><strong>Time:</strong> {booking.time}</p>
-              <p><strong>Status:</strong> {booking.status}</p>
+              <p><strong>Status:</strong> {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}</p> {/* Capitalized status */}
             </div>
-          ))}
-        </div>
-      ) : (
-        <p>You have no previous bookings.</p>
-      )}
+          ))
+        ) : (
+          <p>You have no previous bookings.</p>
+        )}
+      </div>
     </div>
   );
 };
