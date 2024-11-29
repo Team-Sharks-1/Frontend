@@ -98,7 +98,15 @@ const MainPage = () => {
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-4xl text-white font-bold mb-4">Your One-Stop Solution for Home Services</h2>
             <p className="text-xl mb-8">Connect with verified contractors through our streamlined booking system</p>
-            <Button size="lg" onClick={() => navigate('/BookingsPage')}>Book a Service</Button>
+            {isLoggedIn && (
+              <Button
+                size="lg"
+                className="bg-black text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-gray-800 focus:ring-2 focus:ring-gray-500 transition duration-200"
+                onClick={() => navigate('/BookingsPage')}
+              >
+                Book a Service
+              </Button>
+            )}
           </div>
         </section>
 
@@ -176,6 +184,5 @@ const MainPage = () => {
     </div>
   );
 };
-
 
 export default MainPage;
