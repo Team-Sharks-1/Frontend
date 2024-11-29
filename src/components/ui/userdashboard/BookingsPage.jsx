@@ -43,7 +43,7 @@ const BookingsPage = () => {
         setPreviousBookings(pastBookings);
       } catch (error) {
         console.error('Error fetching bookings:', error);
-        alert('Failed to fetch bookings. Please try again later.');
+        alert('No Booking Found.');
       }
     };
 
