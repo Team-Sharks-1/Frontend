@@ -227,51 +227,6 @@ const ServiceDetailsPage = () => {
                   <div className="mt-4">
                     <p className="text-gray-600">{professional.description}</p>
                     <div className="mt-4 flex items-center justify-between">
-                      <div>
-                        <span className="text-lg font-bold text-blue-600">${professional.cost_per_hour}</span>
-                        <span className="text-gray-500">/hr</span>
-                      </div>
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button>Book Now</Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                          <DialogHeader>
-                            <DialogTitle>Book {professional.name}</DialogTitle>
-                          </DialogHeader>
-                          <form onSubmit={(e) => handleBookingSubmit(e, professional.id)} className="space-y-4">
-                          <div>
-                              <Label htmlFor="date">Preferred Date</Label>
-                              <Input
-                                id="date"
-                                type="date"
-                                value={preferredDate}
-                                onChange={(e) => setPreferredDate(e.target.value)}
-                              />
-                            </div>
-                            <div>
-                              <Label htmlFor="time">Preferred Time</Label>
-                              <Input
-                                id="time"
-                                type="time"
-                                value={preferredTime}
-                                onChange={(e) => setPreferredTime(e.target.value)}
-                              />
-                            </div>
-                            <div>
-                              <Label htmlFor="description">Description of Work</Label>
-                              <textarea
-                                id="description"
-                                className="w-full p-2 border rounded-md min-h-[100px]"
-                                placeholder="Please describe the work you need done..."
-                                value={descriptionOfWork}
-                                onChange={(e) => setDescriptionOfWork(e.target.value)}
-                              />
-                            </div>
-                            <Button type="submit" className="w-full">Confirm Booking</Button>
-                          </form>
-                        </DialogContent>
-                      </Dialog>
                     </div>
                   </div>
                 </div>
