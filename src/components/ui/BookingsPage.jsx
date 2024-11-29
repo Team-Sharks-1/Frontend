@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Wrench, Book, Brush, Hammer, Car, Dog, Heart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom'; // Import the useNavigate hook
+import axios from 'axios'; // Import axios for API calls
 import './BookingPage.css'; // Import the newly created CSS file
 
 const services = [
@@ -16,22 +17,22 @@ const services = [
 ];
 
 const timeSlots = ["09:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "01:00 PM"];
-const priceRanges = [
-  { label: "All Prices", value: "all" },
-  { label: "$0 - $30/hr", value: "0-30" },
-  { label: "$31 - $50/hr", value: "31-50" },
-  { label: "$51 - $100/hr", value: "51-100" }
+
+const locations = [
+  { label: "Downtown", value: "Downtown" },
+  { label: "Uptown", value: "Uptown" },
+  { label: "Eastside", value: "Eastside" },
+  { label: "Westside", value: "Westside" }
 ];
 
 const BookingForm = () => {
   const [selectedService, setSelectedService] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
-  const [selectedPriceRange, setSelectedPriceRange] = useState('');
+  const [selectedPrice, setSelectedPrice] = useState(''); // Store selected price
+  const [selectedLocation, setSelectedLocation] = useState('');
   const [userDetails, setUserDetails] = useState({
-    name: '',
     contact: '',
-    address: '',
-    additionalDetails: '',
+    additionalDetails: '', // This will store additional details (description)
   });
 
   const navigate = useNavigate(); // Initialize the useNavigate hook
@@ -44,28 +45,83 @@ const BookingForm = () => {
     }));
   };
 
-  const handleBookingConfirm = () => {
-    if (!selectedService || !selectedTime || !userDetails.address || !userDetails.name || !userDetails.contact) {
+  // Function to convert time from 12-hour format (e.g., "10:00 AM") to 24-hour format (e.g., "10:00:00")
+  const convertTo24HourFormat = (time) => {
+    const [hours, minutes] = time.split(':');
+    const [minutePart, period] = minutes.split(' ');
+
+    let newHours = parseInt(hours, 10);
+    if (period === 'PM' && newHours !== 12) {
+      newHours += 12;
+    }
+    if (period === 'AM' && newHours === 12) {
+      newHours = 0; // Convert 12 AM to 00:00
+    }
+
+    // Ensure the time is in HH:mm:ss format
+    return `${String(newHours).padStart(2, '0')}:${minutePart.padStart(2, '0')}:00`;
+  };
+
+  const handleBookingConfirm = async () => {
+    // Ensure all fields are filled in, including the price
+    if (
+      !selectedService ||
+      !selectedTime ||
+      !selectedLocation ||
+      !selectedPrice || // Ensure price is selected
+      !userDetails.contact
+    ) {
       alert('Please fill in all required fields.');
       return;
     }
 
-    // Save the booking details to localStorage
+    // Use "No description provided by user" if additionalDetails (description) is empty
+    const description = userDetails.additionalDetails || 'No description provided by user';
+
+    // Convert time to 24-hour format (HH:mm:ss)
+    const convertedTime = convertTo24HourFormat(selectedTime);
+
+    // Booking data to send to the backend
     const bookingDetails = {
       service: selectedService,
-      time: selectedTime,
+      time: convertedTime, // Send the converted time in HH:mm:ss format
       date: new Date().toISOString().split('T')[0], // Current date
-      userDetails: userDetails,
+      location: selectedLocation,
+      contact: userDetails.contact, // Move contact here
+      description: description, // Move description here
+      price: selectedPrice, // Include price in the data being sent
     };
 
-    localStorage.setItem('bookingDetails', JSON.stringify(bookingDetails));
+    try {
+      // Fetch the JWT token from localStorage
+      const token = localStorage.getItem('token');
 
-    // Logic to submit the booking request (e.g., saving it to the user's profile or sending it to the backend)
-    alert('Your booking request has been submitted!');
+      // Making API call to create the booking
+      const response = await axios.post('http://localhost:3001/api/bookings', bookingDetails, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // Add the token to the headers
+        }
+      });
 
-    // Navigate to the Bookings Page
-    navigate('/bookings');
+      // Handle successful booking creation
+      if (response.status === 201) {
+        alert('Your booking has been successfully created!');
+        navigate('/bookings'); // Navigate to bookings page
+      } else {
+        alert('There was an issue creating your booking. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error creating booking:', error);
+      alert('There was an error while submitting your booking. Please try again.');
+    }
   };
+
+  // Create a price range (10, 20, 30, ..., 100)
+  const priceOptions = [];
+  for (let i = 10; i <= 100; i += 10) {
+    priceOptions.push(i);
+  }
 
   return (
     <div className="booking-form">
@@ -107,50 +163,43 @@ const BookingForm = () => {
         </select>
       </div>
 
-      {/* Location Input */}
+      {/* Location Dropdown */}
       <div className="form-section">
-        <label htmlFor="address">Your Address:</label>
-        <input
-          type="text"
-          id="address"
-          name="address"
-          value={userDetails.address}
-          onChange={handleInputChange}
-          placeholder="Enter your address"
-          required
-        />
-      </div>
-
-      {/* Price Range Dropdown */}
-      <div className="form-section">
-        <label htmlFor="priceRange">Select Price Range:</label>
+        <label htmlFor="location">Select Location:</label>
         <select
-          id="priceRange"
-          value={selectedPriceRange}
-          onChange={(e) => setSelectedPriceRange(e.target.value)}
+          id="location"
+          value={selectedLocation}
+          onChange={(e) => setSelectedLocation(e.target.value)}
           required
         >
-          {priceRanges.map((range) => (
-            <option key={range.value} value={range.value}>
-              {range.label}
+          <option value="">Choose a location</option>
+          {locations.map((loc) => (
+            <option key={loc.value} value={loc.value}>
+              {loc.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Price Dropdown */}
+      <div className="form-section">
+        <label htmlFor="price">Select Price:</label>
+        <select
+          id="price"
+          value={selectedPrice}
+          onChange={(e) => setSelectedPrice(e.target.value)}
+          required
+        >
+          <option value="">Choose a price</option>
+          {priceOptions.map((price) => (
+            <option key={price} value={price}>
+              ${price}
             </option>
           ))}
         </select>
       </div>
 
       {/* User's Contact Details */}
-      <div className="form-section">
-        <label htmlFor="name">Your Name:</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          value={userDetails.name}
-          onChange={handleInputChange}
-          required
-        />
-      </div>
-
       <div className="form-section">
         <label htmlFor="contact">Contact Number:</label>
         <input
@@ -163,7 +212,7 @@ const BookingForm = () => {
         />
       </div>
 
-      {/* Additional Details */}
+      {/* Additional Details (Description) */}
       <div className="form-section">
         <label htmlFor="additionalDetails">Additional Details (Optional):</label>
         <textarea
