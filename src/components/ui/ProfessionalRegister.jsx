@@ -13,7 +13,6 @@ const services = [
   { id: 'petcare', name: 'Pet Care', icon: 'Dog', description: 'Professional pet sitting and care' },
   { id: 'healthcare', name: 'Healthcare', icon: 'Heart', description: 'Home healthcare services' },
 ];
-
 function ProfessionalRegister() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -23,7 +22,8 @@ function ProfessionalRegister() {
     email: '',
     phoneNumber: '',
     licenseId: '',
-    password: ''
+    password: '',
+    licenseImage: null,  // Add the licenseImage state
   });
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -36,17 +36,62 @@ function ProfessionalRegister() {
     }));
   };
 
+  const handleFileChange = (event) => {
+    setFormData({
+      ...formData,
+      licenseImage: event.target.files[0],  // Save the file object
+    });
+  };
+
+  // const handleRegister = async (event) => {
+  //   event.preventDefault();
+  //   try {
+  //     const response = await fetch('http://localhost:3001/api/register_professionals', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify(formData)
+  //     });
+
+  //     const data = await response.json();
+
+  //     if (response.ok) {
+  //       setSuccessMessage("Registration successful! Redirecting to login...");
+  //       setTimeout(() => navigate('/login/professional'), 2000);
+  //     } else {
+  //       setErrorMessage(data.error || 'Failed to register professional. Please try again.');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //     setErrorMessage('An unexpected error occurred. Please try again later.');
+  //   }
+  // };
+
   const handleRegister = async (event) => {
     event.preventDefault();
+  
+    // Create a new FormData object to handle form and image data
+    const formToSend = new FormData();
+    formToSend.append('serviceType', formData.serviceType);
+    formToSend.append('name', formData.name);
+    formToSend.append('address', formData.address);
+    formToSend.append('email', formData.email);
+    formToSend.append('phoneNumber', formData.phoneNumber);
+    formToSend.append('licenseId', formData.licenseId);
+    formToSend.append('password', formData.password);
+  
+    // Append the license image
+    if (formData.licenseImage) {
+      formToSend.append('licenseImage', formData.licenseImage);
+    }
+  
     try {
-      const response = await fetch('http://localhost:3001/api/register_professionals', {
+      const response = await fetch('http://localhost:3001/api/register_professionals',{
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: formToSend,
       });
-
+  
       const data = await response.json();
-
+  
       if (response.ok) {
         setSuccessMessage("Registration successful! Redirecting to login...");
         setTimeout(() => navigate('/login/professional'), 2000);
@@ -138,6 +183,15 @@ function ProfessionalRegister() {
           onChange={handleInputChange}
           placeholder="Create a password"
           required
+        />
+
+        <label>Upload</label>
+        <input
+          type="file"
+          id="licenseImage"
+          name="licenseImage"
+          accept="image/*"
+          onChange={handleFileChange}
         />
         
         <button type="submit" className="register-button">Register</button>
