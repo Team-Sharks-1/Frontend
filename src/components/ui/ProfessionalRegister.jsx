@@ -23,7 +23,8 @@ function ProfessionalRegister() {
     email: '',
     phoneNumber: '',
     licenseId: '',
-    password: ''
+    password: '',
+    certificate: null,  // Added to store the certificate file
   });
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -32,24 +33,55 @@ function ProfessionalRegister() {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: value,
     }));
+  };
+
+  // Handle file input change
+  const handleFileChange = (e) => {
+    setFormData({
+      ...formData,
+      certificate: e.target.files[0], // Store the file in formData
+    });
   };
 
   const handleRegister = async (event) => {
     event.preventDefault();
+
+    // Upload the certificate file to Cloudinary
+    const formDataForCloudinary = new FormData();
+    formDataForCloudinary.append('file', formData.certificate);
+    formDataForCloudinary.append('upload_preset', 'your_cloudinary_preset'); // Replace with your preset
+
     try {
+      const uploadResponse = await fetch('https://api.cloudinary.com/v1_1/your_cloud_name/upload', {
+        method: 'POST',
+        body: formDataForCloudinary,
+      });
+
+      const uploadData = await uploadResponse.json();
+      if (!uploadResponse.ok) {
+        throw new Error('Failed to upload certificate');
+      }
+
+      // Get the URL of the uploaded certificate
+      const certificateUrl = uploadData.secure_url;
+
+      // Now, proceed with registering the professional
+      const formDataWithCertificate = { ...formData, certificateId: certificateUrl };
+
+      // Sending the registration data to the backend (API)
       const response = await fetch('http://localhost:3001/api/register_professionals', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formDataWithCertificate),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setSuccessMessage("Registration successful! Redirecting to login...");
-        setTimeout(() => navigate('/login/professional'), 2000);
+        setSuccessMessage('Registration successful! Redirecting to login...');
+        setTimeout(() => navigate('/login/professional'), 2000); // Redirect after success
       } else {
         setErrorMessage(data.error || 'Failed to register professional. Please try again.');
       }
@@ -79,7 +111,7 @@ function ProfessionalRegister() {
             </option>
           ))}
         </select>
-        
+
         <label>Name</label>
         <input
           type="text"
@@ -89,7 +121,7 @@ function ProfessionalRegister() {
           placeholder="Enter your name"
           required
         />
-        
+
         <label>Address</label>
         <input
           type="text"
@@ -99,7 +131,7 @@ function ProfessionalRegister() {
           placeholder="Enter your address"
           required
         />
-        
+
         <label>Email Address</label>
         <input
           type="email"
@@ -109,7 +141,7 @@ function ProfessionalRegister() {
           placeholder="Enter your email"
           required
         />
-        
+
         <label>Phone Number</label>
         <input
           type="text"
@@ -119,7 +151,7 @@ function ProfessionalRegister() {
           placeholder="Enter your phone number"
           required
         />
-        
+
         <label>Service License ID</label>
         <input
           type="text"
@@ -129,7 +161,7 @@ function ProfessionalRegister() {
           placeholder="Enter your service license ID"
           required
         />
-        
+
         <label>Password</label>
         <input
           type="password"
@@ -139,7 +171,16 @@ function ProfessionalRegister() {
           placeholder="Create a password"
           required
         />
-        
+
+        {/* Certificate file input */}
+        <label>Upload Certificate</label>
+        <input
+          type="file"
+          name="certificate"
+          onChange={handleFileChange}
+          required
+        />
+
         <button type="submit" className="register-button">Register</button>
       </form>
     </div>
